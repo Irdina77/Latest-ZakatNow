@@ -10,17 +10,13 @@ import zakatIcon from "../assets/zakat-icon.webp";
 function Login({ onLoginSuccess }) {
   const navigate = useNavigate();
   const { language } = useLanguage();
-  const t = getTranslationSection(language, 'login');
+  const t = getTranslationSection(language, "login");
 
-  const [email, setEmail] =
-    useState("");
-
+  const [email, setEmail] = useState("");
   const [password, setPassword] =
     useState("");
-
   const [message, setMessage] =
     useState("");
-
   const [isLoading, setIsLoading] =
     useState(false);
 
@@ -28,7 +24,9 @@ function Login({ onLoginSuccess }) {
     e.preventDefault();
 
     if (!email || !password) {
-      setMessage(`⚠️ ${t.allFieldsRequired}`);
+      setMessage(
+        `⚠️ ${t.allFieldsRequired}`
+      );
       return;
     }
 
@@ -36,17 +34,105 @@ function Login({ onLoginSuccess }) {
     setMessage("");
 
     try {
-      await signInWithEmailAndPassword(
-        auth,
-        email.trim().toLowerCase(),
-        password
+      // Clean input
+      const cleanEmail =
+        email.trim().toLowerCase();
+
+      const cleanPassword =
+        password.trim();
+
+      console.log(
+        "Trying login:",
+        cleanEmail
       );
 
-      setMessage(`✅ ${t.loginSuccessful}`);
-      onLoginSuccess("user");
+      // Firebase login
+      const userCredential =
+        await signInWithEmailAndPassword(
+          auth,
+          cleanEmail,
+          cleanPassword
+        );
+
+      console.log(
+        "Login success:",
+        userCredential.user
+      );
+
+      // Save login session
+      localStorage.setItem(
+        "userEmail",
+        userCredential.user.email
+      );
+
+      // Check role
+      const role =
+        userCredential.user.email ===
+        "admin@gmail.com"
+          ? "admin"
+          : "user";
+
+      setMessage(
+        `✅ ${t.loginSuccessful}`
+      );
+
+      onLoginSuccess(role);
+
+      setTimeout(() => {
+        navigate(
+          role === "admin"
+            ? "/admin/dashboard"
+            : "/dashboard"
+        );
+      }, 1000);
     } catch (error) {
-      setMessage(`❌ ${t.invalidCredentials}`);
-      console.error("Firebase sign-in error:", error);
+      console.error(
+        "Firebase sign-in error:",
+        error
+      );
+
+      console.log(
+        "Firebase sign-in error code:",
+        error.code
+      );
+
+      switch (error.code) {
+        case "auth/invalid-email":
+          setMessage(
+            `❌ ${t.invalidEmail}`
+          );
+          break;
+
+        case "auth/user-not-found":
+          setMessage(
+            `❌ User not found`
+          );
+          break;
+
+        case "auth/wrong-password":
+          setMessage(
+            `❌ Wrong password`
+          );
+          break;
+
+        case "auth/invalid-credential":
+          setMessage(
+            `❌ Invalid email or password`
+          );
+          break;
+
+        case "auth/too-many-requests":
+          setMessage(
+            `❌ Too many attempts. Try again later`
+          );
+          break;
+
+        default:
+          setMessage(
+            `❌ ${t.invalidCredentials}`
+          );
+          break;
+      }
     } finally {
       setIsLoading(false);
     }
@@ -55,7 +141,6 @@ function Login({ onLoginSuccess }) {
   return (
     <div className="glass-page-container">
       <div className="glass-card">
-
         <h1 className="title-with-icon">
           <img
             src={zakatIcon}

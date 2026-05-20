@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
 import { getTranslationSection } from "../translations/translations";
+import "../Styles/HomePage.css";
 import "../Styles/ZakatCalculator.css";
 import zakatIcon from "../../teams/assets/zakat-icon.webp";
 import Chatbot from "../components/Chatbot";
@@ -231,9 +232,29 @@ function ZakatCalculator({ onComplete }) {
       return;
     }
 
+    if (zakat === 0) {
+      alert("You are not eligible for zakat payment.");
+      return;
+    }
+
+    // SAVE DATA UNTUK RECEIPT
+    localStorage.setItem(
+      "zakatAmount",
+      zakat
+    );
+
+    localStorage.setItem(
+      "zakatType",
+      businessMethod === "UntungRugi"
+        ? "Business Zakat"
+        : "Working Capital Zakat"
+    );
+
+    // hantar data ke payment
     if (onComplete) {
       onComplete({
         zakat,
+        amount: zakat,
         total,
         nisab,
         businessMethod,
@@ -242,8 +263,8 @@ function ZakatCalculator({ onComplete }) {
       });
     }
 
-    // Navigate to result page
-    navigate('/result');
+    // pergi payment
+    navigate("/payment");
   };
 
   const formatCurrency = (value) =>
@@ -252,396 +273,439 @@ function ZakatCalculator({ onComplete }) {
       maximumFractionDigits: 2,
     });
 
-return (
+  return (
     <>
       <div className="zakat-container">
         <div className="zakat-app-shell">
 
           {/* 🔥 HEADER */}
-          <header className="zakat-topbar">
-            <div className="zakat-brand">
+          <header className="premium-navbar">
 
-              <img
-                src={zakatIcon}
-                alt="logo"
-                className="zakat-brand-logo-img"
-              />
+            {/* LEFT */}
+            <div className="navbar-left">
 
-              <div className="zakat-brand-text">
-                <h1 className="zakat-brand-title">ZakatNow</h1>
-
-                <div className="zakat-divider">
-                  <span></span>
-                  <span className="diamond">◆</span>
-                  <span></span>
-                </div>
-
-                <p className="zakat-brand-subtitle">
-                  {t.calculateYourBusinessZakat}
-                </p>
-              </div>
-
-            </div>
-
-            <div className="zakat-topbar-actions">
               <button
-                className="zakat-menu-button"
-                onClick={() => setIsDrawerOpen(true)}
-                aria-label="Open menu"
+                className="sidebar-toggle"
+                onClick={() =>
+                  setIsDrawerOpen(true)
+                }
               >
-                <span className="hamburger-line"></span>
-                <span className="hamburger-line"></span>
-                <span className="hamburger-line"></span>
+                ≡
               </button>
 
-              <div className="zakat-user-chip">
-                👤 User
-              </div>
+              <button className="navbar-logo-button">
+                <img
+                  src={zakatIcon}
+                  alt="logo"
+                  className="navbar-logo"
+                />
+
+                <span className="navbar-brand-name">
+                  ZakatNow
+                </span>
+              </button>
+
             </div>
+
+            {/* MENU */}
+            <nav className="premium-nav-menu">
+
+              <button
+                onClick={() =>
+                  navigate("/dashboard")
+                }
+              >
+                HOME PAGE
+              </button>
+
+              <button
+                onClick={() =>
+                  navigate("/calculator")
+                }
+              >
+                CALCULATE ZAKAT
+              </button>
+
+              <button
+                onClick={() =>
+                  navigate("/payment")
+                }
+              >
+                PAY ZAKAT
+              </button>
+
+              <button
+                onClick={() =>
+                  navigate("/check-zakat")
+                }
+              >
+                CHECK ZAKAT
+              </button>
+
+            </nav>
+
+            {/* RIGHT */}
+            <div className="navbar-right">
+
+              <button
+                className="language-switch"
+              >
+                🌐 EN ▼
+              </button>
+
+              <button
+                className="user-button"
+                onClick={() =>
+                  setIsDrawerOpen(true)
+                }
+              >
+                👤 User
+              </button>
+
+            </div>
+
           </header>
 
-        <div className="zakat-stepper">
-          <div className={`zakat-step ${!hasCalculated ? "active" : "done"}`}>
-            <span className="zakat-step-circle">1</span>
-            <span>Calculator</span>
-          </div>
-          <div className="zakat-step-line"></div>
-
-          <div className={`zakat-step ${hasCalculated ? "active" : ""}`}>
-            <span className="zakat-step-circle">2</span>
-            <span>Result</span>
-          </div>
-          <div className="zakat-step-line"></div>
-
-          <div className="zakat-step">
-            <span className="zakat-step-circle">3</span>
-            <span>Payment</span>
-          </div>
-          <div className="zakat-step-line"></div>
-
-          <div className="zakat-step">
-            <span className="zakat-step-circle">4</span>
-            <span>Receipt</span>
-          </div>
-        </div>
-
-        <div className={`zakat-grid ${showSummary ? 'zakat-grid-calculated' : ''}`}>
-          <section className="zakat-card">
-            <div className="zakat-section-head">
-              <div className="zakat-section-icon">🧮</div>
-              <div>
-                <h3 className="zakat-card-title">{t.enterFinancialData}</h3>
-                <p className="zakat-card-subtitle">
-                  Enter your business information to calculate zakat.
-                </p>
-              </div>
+          <div className="zakat-stepper">
+            <div className={`zakat-step ${!hasCalculated ? "active" : "done"}`}>
+              <span className="zakat-step-circle">1</span>
+              <span>Calculator</span>
             </div>
+            <div className="zakat-step-line"></div>
 
-            <div className="zakat-field-group">
-              <h3 className="zakat-field-group-title">Location & Method</h3>
-              <div className="zakat-two-col">
-                <div className="zakat-field-block">
-                  <label className="zakat-label">{t.year}</label>
-                  <select
-                    value={selectedYear}
-                    onChange={(e) => {
-                      setSelectedYear(e.target.value);
-                      setHasCalculated(false);
-                      setShowSummary(false);
-                    }}
-                    className="zakat-select"
-                  >
-                    {Object.keys(yearRates).map((year) => (
-                      <option key={year} value={year}>
-                        {year}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="zakat-field-block">
-                  <label className="zakat-label">{t.state}</label>
-                  <select
-                    value={selectedState}
-                    onChange={(e) => {
-                      setSelectedState(e.target.value);
-                      setHasCalculated(false);
-                      setShowSummary(false);
-                    }}
-                    className="zakat-select"
-                  >
-                    {Object.keys(yearRates[selectedYear]).map((state) => (
-                      <option key={state} value={state}>
-                        {state}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className="zakat-field-block">
-                <label className="zakat-label">{t.calculationMethod}</label>
-                <select
-                  value={businessMethod}
-                  onChange={(e) => {
-                    setBusinessMethod(e.target.value);
-                    setHasCalculated(false);
-                    setShowSummary(false);
-                  }}
-                  className="zakat-select"
-                >
-                  <option value="UntungRugi">Profit & Loss</option>
-                  <option value="ModalKerja">Working Capital</option>
-                </select>
-              </div>
+            <div className={`zakat-step ${hasCalculated ? "active" : ""}`}>
+              <span className="zakat-step-circle">2</span>
+              <span>Result</span>
             </div>
+            <div className="zakat-step-line"></div>
 
-            <div className="zakat-field-group">
-              <h3 className="zakat-field-group-title">Financial Data</h3>
-              {businessMethod === "UntungRugi" ? (
-                <>
-                  <div className="zakat-field-block">
-                    <label className="zakat-label">{t.totalRevenue}</label>
-                    <input
-                      type="number"
-                      placeholder="Enter total revenue"
-                      value={businessRevenue}
-                      onChange={(e) => {
-                        setBusinessRevenue(e.target.value);
-                        setHasCalculated(false);
-                        setShowSummary(false);
-                      }}
-                      className="zakat-input"
-                    />
-                  </div>
-
-                  <div className="zakat-field-block">
-                    <label className="zakat-label">{t.totalExpenses}</label>
-                    <input
-                      type="number"
-                      placeholder="Enter total expenses"
-                      value={businessExpenses}
-                      onChange={(e) => {
-                        setBusinessExpenses(e.target.value);
-                        setHasCalculated(false);
-                        setShowSummary(false);
-                      }}
-                      className="zakat-input"
-                    />
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="zakat-field-block">
-                    <label className="zakat-label">{t.currentAssets}</label>
-                    <input
-                      type="number"
-                      placeholder="Enter current assets"
-                      value={currentAssets}
-                      onChange={(e) => {
-                        setCurrentAssets(e.target.value);
-                        setHasCalculated(false);
-                        setShowSummary(false);
-                      }}
-                      className="zakat-input"
-                    />
-                  </div>
-
-                  <div className="zakat-field-block">
-                    <label className="zakat-label">{t.currentLiabilities}</label>
-                    <input
-                      type="number"
-                      placeholder="Enter current liabilities"
-                      value={currentLiabilities}
-                      onChange={(e) => {
-                        setCurrentLiabilities(e.target.value);
-                        setHasCalculated(false);
-                        setShowSummary(false);
-                      }}
-                      className="zakat-input"
-                    />
-                  </div>
-                </>
-              )}
+            <div className="zakat-step">
+              <span className="zakat-step-circle">3</span>
+              <span>Payment</span>
             </div>
+            <div className="zakat-step-line"></div>
 
-            <button
-              className="zakat-button zakat-button-primary"
-              type="button"
-              onClick={handleCalculate}
-            >
-              {t.calculateZakat}
-            </button>
-
-            <div className="zakat-note-box">
-              ℹ️ Please fill in the required values first, then click Calculate
-              Zakat.
+            <div className="zakat-step">
+              <span className="zakat-step-circle">4</span>
+              <span>Receipt</span>
             </div>
-          </section>
+          </div>
 
-          {showSummary ? (
-            <section className="zakat-card zakat-result-card zakat-summary-animated">
+          <div className={`zakat-grid ${showSummary ? 'zakat-grid-calculated' : ''}`}>
+            <section className="zakat-card">
               <div className="zakat-section-head">
-                <div className="zakat-section-icon">📊</div>
+                <div className="zakat-section-icon">🧮</div>
                 <div>
-                  <h3 className="zakat-card-title">Zakat Summary</h3>
+                  <h3 className="zakat-card-title">{t.enterFinancialData}</h3>
                   <p className="zakat-card-subtitle">
-                    Summary of your zakat calculation.
+                    Enter your business information to calculate zakat.
                   </p>
                 </div>
               </div>
 
-              <div className="zakat-summary-top">
-                <div className="zakat-summary-mini">
-                  <span className="zakat-summary-mini-label">State</span>
-                  <strong>{selectedState}</strong>
-                </div>
+              <div className="zakat-field-group">
+                <h3 className="zakat-field-group-title">Location & Method</h3>
+                <div className="zakat-two-col">
+                  <div className="zakat-field-block">
+                    <label className="zakat-label">{t.year}</label>
+                    <select
+                      value={selectedYear}
+                      onChange={(e) => {
+                        setSelectedYear(e.target.value);
+                        setHasCalculated(false);
+                        setShowSummary(false);
+                      }}
+                      className="zakat-select"
+                    >
+                      {Object.keys(yearRates).map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-                <div className="zakat-summary-mini">
-                  <span className="zakat-summary-mini-label">Nisab Year</span>
-                  <strong>{selectedYear}</strong>
-                </div>
-
-                <div className="zakat-summary-mini">
-                  <span className="zakat-summary-mini-label">Nisab</span>
-                  <strong>RM {formatCurrency(nisab)}</strong>
-                </div>
-              </div>
-
-              <div className="zakat-total-status-box">
-                <div className="zakat-total-box">
-                  <div className="zakat-total-label">Total Zakat Payable</div>
-                  <div className="zakat-total-amount">
-                    {hasCalculated ? `RM ${zakat.toFixed(2)}` : "RM --"}
+                  <div className="zakat-field-block">
+                    <label className="zakat-label">{t.state}</label>
+                    <select
+                      value={selectedState}
+                      onChange={(e) => {
+                        setSelectedState(e.target.value);
+                        setHasCalculated(false);
+                        setShowSummary(false);
+                      }}
+                      className="zakat-select"
+                    >
+                      {Object.keys(yearRates[selectedYear]).map((state) => (
+                        <option key={state} value={state}>
+                          {state}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
 
-                <div
-                  className={`zakat-status-badge ${
-                    hasCalculated
-                      ? total >= nisab
-                        ? "success"
-                        : "danger"
-                      : ""
-                  }`}
-                >
-                  {hasCalculated
-                    ? total >= nisab
-                      ? "✔ Zakat Required"
-                      : "✗ Not Required"
-                    : "Calculating..."}
+                <div className="zakat-field-block">
+                  <label className="zakat-label">{t.calculationMethod}</label>
+                  <select
+                    value={businessMethod}
+                    onChange={(e) => {
+                      setBusinessMethod(e.target.value);
+                      setHasCalculated(false);
+                      setShowSummary(false);
+                    }}
+                    className="zakat-select"
+                  >
+                    <option value="UntungRugi">Profit & Loss</option>
+                    <option value="ModalKerja">Working Capital</option>
+                  </select>
                 </div>
               </div>
 
-            <div className="zakat-progress-card">
-              <div className="zakat-progress-head">
-                <span>Progress to Nisab</span>
-                <strong>
-                  {hasCalculated
-                    ? `${Math.min((total / nisab) * 100, 100).toFixed(2)}%`
-                    : "0.00%"}
-                </strong>
+              <div className="zakat-field-group">
+                <h3 className="zakat-field-group-title">Financial Data</h3>
+                {businessMethod === "UntungRugi" ? (
+                  <>
+                    <div className="zakat-field-block">
+                      <label className="zakat-label">{t.totalRevenue}</label>
+                      <input
+                        type="number"
+                        placeholder="Enter total revenue"
+                        value={businessRevenue}
+                        onChange={(e) => {
+                          setBusinessRevenue(e.target.value);
+                          setHasCalculated(false);
+                          setShowSummary(false);
+                        }}
+                        className="zakat-input"
+                      />
+                    </div>
+
+                    <div className="zakat-field-block">
+                      <label className="zakat-label">{t.totalExpenses}</label>
+                      <input
+                        type="number"
+                        placeholder="Enter total expenses"
+                        value={businessExpenses}
+                        onChange={(e) => {
+                          setBusinessExpenses(e.target.value);
+                          setHasCalculated(false);
+                          setShowSummary(false);
+                        }}
+                        className="zakat-input"
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="zakat-field-block">
+                      <label className="zakat-label">{t.currentAssets}</label>
+                      <input
+                        type="number"
+                        placeholder="Enter current assets"
+                        value={currentAssets}
+                        onChange={(e) => {
+                          setCurrentAssets(e.target.value);
+                          setHasCalculated(false);
+                          setShowSummary(false);
+                        }}
+                        className="zakat-input"
+                      />
+                    </div>
+
+                    <div className="zakat-field-block">
+                      <label className="zakat-label">{t.currentLiabilities}</label>
+                      <input
+                        type="number"
+                        placeholder="Enter current liabilities"
+                        value={currentLiabilities}
+                        onChange={(e) => {
+                          setCurrentLiabilities(e.target.value);
+                          setHasCalculated(false);
+                          setShowSummary(false);
+                        }}
+                        className="zakat-input"
+                      />
+                    </div>
+                  </>
+                )}
               </div>
 
-              <div className="zakat-progress">
-                <div
-                  className="zakat-progress-bar"
-                  style={{
-                    width: `${
-                      hasCalculated ? Math.min((total / nisab) * 100, 100) : 0
-                    }%`,
-                  }}
-                />
-              </div>
-
-              <div className="zakat-progress-text">
-                RM {hasCalculated ? formatCurrency(total) : "0.00"} / RM{" "}
-                {formatCurrency(nisab)}
-              </div>
-            </div>
-
-            <div className="zakat-advice-card">
-              <div className="zakat-advice-title">AI Financial Insight</div>
-              <p>{getFinancialInsight()}</p>
-            </div>
-
-            <div className="zakat-action-row">
               <button
-                onClick={saveData}
-                className="zakat-button zakat-button-secondary"
+                className="zakat-button zakat-button-primary"
                 type="button"
+                onClick={handleCalculate}
               >
-                Save Calculation
+                {t.calculateZakat}
               </button>
 
-              <button
-                onClick={handleProceedToResult}
-                className="zakat-button zakat-button-gold"
-                type="button"
-                disabled={!hasCalculated || zakat === 0}
-                style={{
-                  cursor:
-                    hasCalculated && zakat > 0 ? "pointer" : "not-allowed",
-                  opacity: hasCalculated && zakat > 0 ? 1 : 0.6,
-                }}
-              >
-                Proceed to Payment
-              </button>
-            </div>
-          </section>
-          ) : (
-            <section className="zakat-card zakat-placeholder-card">
-              <div className="zakat-placeholder-content">
-                <div className="zakat-placeholder-icon">📈</div>
-                <h3 className="zakat-placeholder-title">Ready to Calculate</h3>
-                <p className="zakat-placeholder-text">
-                  Complete your financial information to generate your zakat summary.
-                </p>
+              <div className="zakat-note-box">
+                ℹ️ Please fill in the required values first, then click Calculate
+                Zakat.
               </div>
             </section>
-          )}
-        </div>
 
-        <div className="zakat-info-strip">
-          <div className="zakat-info-card">
-            <div className="zakat-info-icon">🛡️</div>
-            <div>
-              <h4>
-                Nisab Information {selectedYear} ({selectedState})
-              </h4>
-              <p>
-                The current nisab calculation is based on the current gold
-                value.
-              </p>
+            {showSummary ? (
+              <section className="zakat-card zakat-result-card zakat-summary-animated">
+                <div className="zakat-section-head">
+                  <div className="zakat-section-icon">📊</div>
+                  <div>
+                    <h3 className="zakat-card-title">Zakat Summary</h3>
+                    <p className="zakat-card-subtitle">
+                      Summary of your zakat calculation.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="zakat-summary-top">
+                  <div className="zakat-summary-mini">
+                    <span className="zakat-summary-mini-label">State</span>
+                    <strong>{selectedState}</strong>
+                  </div>
+
+                  <div className="zakat-summary-mini">
+                    <span className="zakat-summary-mini-label">Nisab Year</span>
+                    <strong>{selectedYear}</strong>
+                  </div>
+
+                  <div className="zakat-summary-mini">
+                    <span className="zakat-summary-mini-label">Nisab</span>
+                    <strong>RM {formatCurrency(nisab)}</strong>
+                  </div>
+                </div>
+
+                <div className="zakat-total-status-box">
+                  <div className="zakat-total-box">
+                    <div className="zakat-total-label">Total Zakat Payable</div>
+                    <div className="zakat-total-amount">
+                      {hasCalculated ? `RM ${zakat.toFixed(2)}` : "RM --"}
+                    </div>
+                  </div>
+
+                  <div
+                    className={`zakat-status-badge ${hasCalculated
+                        ? total >= nisab
+                          ? "success"
+                          : "danger"
+                        : ""
+                      }`}
+                  >
+                    {hasCalculated
+                      ? total >= nisab
+                        ? "✔ Zakat Required"
+                        : "✗ Not Required"
+                      : "Calculating..."}
+                  </div>
+                </div>
+
+                <div className="zakat-progress-card">
+                  <div className="zakat-progress-head">
+                    <span>Progress to Nisab</span>
+                    <strong>
+                      {hasCalculated
+                        ? `${Math.min((total / nisab) * 100, 100).toFixed(2)}%`
+                        : "0.00%"}
+                    </strong>
+                  </div>
+
+                  <div className="zakat-progress">
+                    <div
+                      className="zakat-progress-bar"
+                      style={{
+                        width: `${hasCalculated ? Math.min((total / nisab) * 100, 100) : 0
+                          }%`,
+                      }}
+                    />
+                  </div>
+
+                  <div className="zakat-progress-text">
+                    RM {hasCalculated ? formatCurrency(total) : "0.00"} / RM{" "}
+                    {formatCurrency(nisab)}
+                  </div>
+                </div>
+
+                <div className="zakat-advice-card">
+                  <div className="zakat-advice-title">AI Financial Insight</div>
+                  <p>{getFinancialInsight()}</p>
+                </div>
+
+                <div className="zakat-action-row">
+                  <button
+                    onClick={saveData}
+                    className="zakat-button zakat-button-secondary"
+                    type="button"
+                  >
+                    Save Calculation
+                  </button>
+
+                  <button
+                    onClick={handleProceedToResult}
+                    className="zakat-button zakat-button-gold"
+                    type="button"
+                    disabled={!hasCalculated || zakat === 0}
+                    style={{
+                      cursor:
+                        hasCalculated && zakat > 0 ? "pointer" : "not-allowed",
+                      opacity: hasCalculated && zakat > 0 ? 1 : 0.6,
+                    }}
+                  >
+                    Proceed to Payment
+                  </button>
+                </div>
+              </section>
+            ) : (
+              <section className="zakat-card zakat-placeholder-card">
+                <div className="zakat-placeholder-content">
+                  <div className="zakat-placeholder-icon">📈</div>
+                  <h3 className="zakat-placeholder-title">Ready to Calculate</h3>
+                  <p className="zakat-placeholder-text">
+                    Complete your financial information to generate your zakat summary.
+                  </p>
+                </div>
+              </section>
+            )}
+          </div>
+
+          <div className="zakat-info-strip">
+            <div className="zakat-info-card">
+              <div className="zakat-info-icon">🛡️</div>
+              <div>
+                <h4>
+                  Nisab Information {selectedYear} ({selectedState})
+                </h4>
+                <p>
+                  The current nisab calculation is based on the current gold
+                  value.
+                </p>
+              </div>
             </div>
-          </div>
 
-          <div className="zakat-info-stat">
-            <span>Current Gold Price</span>
-            <strong>RM 494.67 / gram</strong>
-          </div>
+            <div className="zakat-info-stat">
+              <span>Current Gold Price</span>
+              <strong>RM 494.67 / gram</strong>
+            </div>
 
-          <div className="zakat-info-stat">
-            <span>Nisab (85 grams)</span>
-            <strong>RM {formatCurrency(nisab)}</strong>
-          </div>
+            <div className="zakat-info-stat">
+              <span>Nisab (85 grams)</span>
+              <strong>RM {formatCurrency(nisab)}</strong>
+            </div>
 
-          <div className="zakat-info-stat">
-            <span>Zakat Rate</span>
-            <strong>2.5%</strong>
+            <div className="zakat-info-stat">
+              <span>Zakat Rate</span>
+              <strong>2.5%</strong>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <SidebarDrawer
-      isOpen={isDrawerOpen}
-      onClose={() => setIsDrawerOpen(false)}
-    />
+      <SidebarDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+      />
 
-    <Chatbot />
-  </>
-);
+      <Chatbot />
+    </>
+  );
 }
 
 export default ZakatCalculator;

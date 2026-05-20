@@ -1,200 +1,905 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../firebase';
-import { useLanguage } from '../context/LanguageContext';
-import { getTranslationSection } from '../translations/translations';
-import SidebarDrawer from '../components/SidebarDrawer';
-import '../Styles/HomePage.css';
-import zakatIcon from '../../teams/assets/zakat-icon.webp';
+import {
+  useEffect,
+  useState,
+  useRef,
+} from "react";
+
+import { useNavigate } from "react-router-dom";
+
+import { onAuthStateChanged } from "firebase/auth";
+
+import { auth } from "../firebase";
+
+import {
+  useLanguage,
+} from "../context/LanguageContext";
+
+import {
+  getTranslationSection,
+} from "../translations/translations";
+
+import {
+  Calculator,
+  HandCoins,
+  ReceiptText,
+} from "lucide-react";
+
+import SidebarDrawer from "../components/SidebarDrawer";
+
+import "../Styles/HomePage.css";
+
+import zakatIcon from "../../teams/assets/zakat-icon.webp";
 
 export default function HomePage() {
+
   const navigate = useNavigate();
-  const { language } = useLanguage();
-  const t = getTranslationSection(language, 'homepage');
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [userName, setUserName] = useState('Valued User');
-  const [userEmail, setUserEmail] = useState('');
-  const [nisabValue, setNisabValue] = useState(42047);
 
+  const {
+    language,
+    updateLanguage,
+  } = useLanguage();
+
+  const t =
+    getTranslationSection(
+      language,
+      "homepage"
+    );
+
+  const [isDrawerOpen,
+    setIsDrawerOpen] =
+    useState(false);
+
+  const [showLogoMenu,
+    setShowLogoMenu] =
+    useState(false);
+
+  const [showAboutModal,
+    setShowAboutModal] =
+    useState(false);
+
+  const [showAsnafModal,
+    setShowAsnafModal] =
+    useState(false);
+
+  const [selectedAsnaf,
+    setSelectedAsnaf] =
+    useState("Fakir");
+
+  const [showNisabModal,
+    setShowNisabModal] =
+    useState(false);
+
+  const [userName,
+    setUserName] =
+    useState("Valued User");
+
+  const [goldPrice,
+    setGoldPrice] =
+    useState(425);
+
+  const [nisabValue,
+    setNisabValue] =
+    useState(36125);
+
+  const menuRef =
+    useRef(null);
+
+  // ======================
+  // USER
+  // ======================
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const email = user.email || '';
-        const displayName = user.displayName?.trim();
-        const username = email.split('@')[0];
 
-        setUserEmail(email);
-        setUserName(
-          displayName ||
-            (username
-              ? username.charAt(0).toUpperCase() + username.slice(1)
-              : 'Valued User')
-        );
-      } else {
-        setUserName('Valued User');
-        setUserEmail('');
-      }
-    });
+    const unsubscribe =
+      onAuthStateChanged(
+        auth,
+        (user) => {
 
-    return () => unsubscribe();
+          if (user) {
+
+            const email =
+              user.email || "";
+
+            const displayName =
+              user.displayName?.trim();
+
+            const username =
+              email.split("@")[0];
+
+            setUserName(
+              displayName ||
+              (
+                username
+                  ? username
+                    .charAt(0)
+                    .toUpperCase() +
+                  username.slice(1)
+                  : "Valued User"
+              )
+            );
+          }
+        }
+      );
+
+    return () =>
+      unsubscribe();
+
   }, []);
 
+  // ======================
+  // NISAB
+  // ======================
   useEffect(() => {
-    const savedNisab = JSON.parse(localStorage.getItem('nisabData') || '{}');
-    if (savedNisab.goldPrice) {
-      setNisabValue(Number(savedNisab.goldPrice) * 85);
-    } else {
-      setNisabValue(42047 * 85); // Default calculation
-    }
+
+    const savedNisab =
+      JSON.parse(
+        localStorage.getItem(
+          "nisabData"
+        ) || "{}"
+      );
+
+    const currentGold =
+      savedNisab.goldPrice ||
+      425;
+
+    setGoldPrice(
+      currentGold
+    );
+
+    setNisabValue(
+      currentGold * 85
+    );
+
+  }, []);
+
+  // ======================
+  // CLOSE MENU
+  // ======================
+  useEffect(() => {
+
+    const handleClickOutside =
+      (event) => {
+
+        if (
+          menuRef.current &&
+          !menuRef.current.contains(
+            event.target
+          )
+        ) {
+          setShowLogoMenu(
+            false
+          );
+        }
+      };
+
+    document.addEventListener(
+      "mousedown",
+      handleClickOutside
+    );
+
+    return () => {
+
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutside
+      );
+    };
+
   }, []);
 
   return (
     <>
       <div className="home-page">
-        <header className="home-topbar">
-          <div className="home-brand">
-            <img
-              src={zakatIcon}
-              alt="logo"
-              className="home-brand-logo-img"
-            />
-            <div className="home-brand-text">
-              <h1 className="home-brand-title">ZakatNow</h1>
-              <div className="home-divider">
-                <span></span>
-                <span className="diamond">◆</span>
-                <span></span>
-              </div>
-              <p className="home-brand-subtitle">
-                Calculate your business zakat easily and accurately
-              </p>
-            </div>
-          </div>
 
-          <div className="home-topbar-actions">
-            <button
-              className="home-menu-button"
-              onClick={() => setIsDrawerOpen(true)}
-              aria-label="Open menu"
-            >
-              <span className="hamburger-line"></span>
-              <span className="hamburger-line"></span>
-              <span className="hamburger-line"></span>
-            </button>
-            <div className="home-user-chip">
-              👤 User
+        {/* ======================
+            NAVBAR
+        ====================== */}
+        <header className="premium-navbar">
+
+          <div
+            className="navbar-container"
+            ref={menuRef}
+          >
+
+            {/* LOGO LEFT */}
+            <div className="navbar-left">
+
+              <button className="navbar-logo-button">
+                <img
+                  src={zakatIcon}
+                  alt="logo"
+                  className="navbar-logo"
+                />
+
+                <div>
+                  <span className="navbar-brand-name">
+                    ZakatNow
+                  </span>
+
+                  <p className="navbar-subtitle">
+                    Smart AI-Powered Zakat
+                  </p>
+                </div>
+              </button>
+
+            </div>
+
+            {/* MENU CENTER */}
+            <nav className="premium-nav-menu">
+
+              <button
+                onClick={() =>
+                  navigate("/dashboard")
+                }
+              >
+                HOME PAGE
+              </button>
+
+              <button
+                onClick={() =>
+                  navigate("/calculator")
+                }
+              >
+                CALCULATE ZAKAT
+              </button>
+
+              <button
+                onClick={() =>
+                  navigate("/payment")
+                }
+              >
+                PAY ZAKAT
+              </button>
+
+              <button
+                onClick={() =>
+                  navigate("/check-zakat")
+                }
+              >
+                CHECK ZAKAT
+              </button>
+
+            </nav>
+
+            {/* MENU BUTTON RIGHT */}
+            <div className="navbar-menu-right">
+
+              <button
+                className="sidebar-toggle"
+                onClick={() =>
+                  setShowLogoMenu(
+                    !showLogoMenu
+                  )
+                }
+              >
+                ≡
+              </button>
+
+              {showLogoMenu && (
+                <div className="logo-dropdown">
+
+                  <button
+                    onClick={() => {
+                      setShowAboutModal(true);
+                      setShowLogoMenu(false);
+                    }}
+                  >
+                    About Zakat
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setShowAsnafModal(true);
+                      setShowLogoMenu(false);
+                    }}
+                  >
+                    Asnaf Zakat
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      navigate("/profile");
+                      setShowLogoMenu(false);
+                    }}
+                  >
+                    Profile
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      navigate("/settings");
+                      setShowLogoMenu(false);
+                    }}
+                  >
+                    Setting
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      localStorage.clear();
+                      navigate("/");
+                    }}
+                  >
+                    Log Out
+                  </button>
+
+                </div>
+              )}
+
             </div>
           </div>
         </header>
 
+        {/* ======================
+            MAIN CONTENT
+        ====================== */}
         <main className="home-main">
-          <section className="home-hero-section">
-            <div className="home-hero-content">
-              <div className="home-hero-text">
-                <h2 className="home-greeting">ASSALAMUALAIKUM, WELCOME BACK</h2>
-                <h3 className="home-user-name">{userName}</h3>
-                <p className="home-user-email">{userEmail}</p>
-                <p className="home-description">
-                  {t.description}
+
+          {/* HERO VIDEO */}
+          <section className="hero-video-section">
+
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="hero-video"
+            >
+              <source
+                src="/videos/zakat-hero.mp4"
+                type="video/mp4"
+              />
+            </video>
+
+            <div className="hero-overlay">
+
+              <div className="hero-content">
+
+                <p className="hero-small-text">
+                  ASSALAMUALAIKUM,
+                  WELCOME BACK
                 </p>
-                <div className="home-hero-buttons">
-                  <button onClick={() => navigate('/calculator')} className="home-btn-primary">
-                    {t.openCalculator}
-                  </button>
-                  <button onClick={() => navigate('/nisab')} className="home-btn-secondary">
-                    {t.viewNisab}
-                  </button>
-                </div>
-              </div>
-              <div className="home-hero-illustration">
-                <div className="illustration-content">
-                  <div className="illustration-icon">🕌</div>
-                  <div className="illustration-elements">
-                    <span className="ill-element">💰</span>
-                    <span className="ill-element">🧮</span>
-                    <span className="ill-element">📊</span>
-                  </div>
-                  <div className="illustration-pattern">
-                    <span>✦</span>
-                    <span>☪️</span>
-                    <span>✦</span>
-                  </div>
-                </div>
+
+                <h1 className="hero-name">
+                  {userName}
+                </h1>
+
+                <p className="hero-description">
+                  Calculate your
+                  business zakat
+                  easily and
+                  accurately with
+                  our smart zakat
+                  system.
+                </p>
+
               </div>
             </div>
           </section>
 
-          <section className="home-stats-section">
-            <div className="home-stats-grid">
-              <div className="home-stat-card nisab-card">
-                <div className="stat-icon">💰</div>
-                <div className="stat-content">
-                  <h4 className="stat-label">Total Nisab</h4>
-                  <div className="stat-value">RM {nisabValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                  <p className="stat-note">Based on current gold price</p>
-                </div>
+          {/* FEATURE CARDS */}
+          <section className="feature-grid">
+
+            <div className="feature-card">
+
+              <div className="feature-icon">
+                <Calculator
+                  size={34}
+                  strokeWidth={2}
+                />
               </div>
 
-              <div className="home-stat-card rate-card">
-                <div className="stat-icon">📈</div>
-                <div className="stat-content">
-                  <h4 className="stat-label">Zakat Rate</h4>
-                  <div className="stat-value">2.5%</div>
-                  <p className="stat-note">According to syariah</p>
-                </div>
+              <div className="feature-content">
+
+                <h3>
+                  Calculate
+                  Zakat
+                </h3>
+
+                <p>
+                  Calculate your
+                  business zakat
+                  quickly and
+                  accurately.
+                </p>
+
               </div>
 
-              <div className="home-stat-card status-card">
-                <div className="stat-icon">✅</div>
-                <div className="stat-content">
-                  <h4 className="stat-label">System Status</h4>
-                  <div className="stat-value">Ready to Calculate</div>
-                  <p className="stat-note">All systems operational</p>
-                </div>
-              </div>
+              <button
+                onClick={() =>
+                  navigate(
+                    "/calculator"
+                  )
+                }
+              >
+              </button>
+
             </div>
+
+            <div className="feature-card">
+
+              <div className="feature-icon">
+                <HandCoins
+                  size={34}
+                  strokeWidth={2}
+                />
+              </div>
+
+              <div className="feature-content">
+
+                <h3>
+                  Pay Zakat
+                </h3>
+
+                <p>
+                  Pay zakat
+                  online securely
+                  and
+                  conveniently.
+                </p>
+
+              </div>
+
+              <button
+                onClick={() =>
+                  navigate(
+                    "/payment"
+                  )
+                }
+              >
+              </button>
+
+            </div>
+
+            <div className="feature-card">
+
+              <div className="feature-icon">
+                <ReceiptText
+                  size={34}
+                  strokeWidth={2}
+                />
+              </div>
+
+              <div className="feature-content">
+
+                <h3>
+                  Check Zakat
+                </h3>
+
+                <p>
+                  Review your
+                  zakat payment
+                  history easily.
+                </p>
+
+              </div>
+
+              <button
+                onClick={() =>
+                  navigate(
+                    "/check-zakat"
+                  )
+                }
+              >
+              </button>
+
+            </div>
+
           </section>
 
-          <section className="home-learn-section">
-            <div className="home-learn-header">
-              <h2>Learn About Zakat</h2>
-              <p>Understand zakat, business zakat, and the benefits of paying zakat.</p>
+          {/* NISAB */}
+          {/* NISAB */}
+          <section className="nisab-section">
+
+            <div className="nisab-card">
+
+              <div className="nisab-left">
+
+                <div className="nisab-badge">
+                  🪙
+                </div>
+
+                <div>
+
+                  <h2>
+                    CURRENT NISAB
+                    RATE (2026)
+                  </h2>
+
+                  <p className="nisab-subtitle">
+                    Nisab is the minimum
+                    amount of wealth one
+                    must possess before
+                    being obligated to
+                    pay zakat.
+                  </p>
+
+                  <button
+                    className="nisab-btn"
+                    onClick={() =>
+                      setShowNisabModal(
+                        true
+                      )
+                    }
+                  >
+                    Learn More About
+                    Nisab
+                  </button>
+
+                </div>
+
+              </div>
+
+              <div className="nisab-grid">
+
+                <div className="nisab-item">
+                  <h4>
+                    Gold Price
+                  </h4>
+
+                  <h3>
+                    RM {goldPrice}/g
+                  </h3>
+                </div>
+
+                <div className="nisab-item">
+                  <h4>
+                    Nisab Threshold
+                  </h4>
+
+                  <h3>
+                    RM{" "}
+                    {nisabValue.toLocaleString()}
+                  </h3>
+                </div>
+
+                <div className="nisab-item">
+                  <h4>
+                    Zakat Rate
+                  </h4>
+
+                  <h3>
+                    2.5%
+                  </h3>
+                </div>
+
+                <div className="nisab-item">
+                  <h4>
+                    Updated
+                  </h4>
+
+                  <h3>
+                    Today
+                  </h3>
+                </div>
+
+              </div>
+
             </div>
 
-            <div className="home-learn-grid">
-              <article className="home-learn-card">
-                <div className="home-learn-icon">🕌</div>
-                <h3>What is Zakat?</h3>
-                <p>
-                  Zakat is a compulsory charitable contribution in Islam for Muslims who meet the required financial threshold (nisab). It helps purify wealth and supports those in need, promoting fairness and social welfare.
-                </p>
-              </article>
-
-              <article className="home-learn-card">
-                <div className="home-learn-icon">🧮</div>
-                <h3>What is Business Zakat?</h3>
-                <p>
-                  Business zakat (Zakat Perniagaan) is a mandatory zakat imposed on business assets and profits that meet the nisab requirement. It is calculated annually.
-                </p>
-              </article>
-
-              <article className="home-learn-card">
-                <div className="home-learn-icon">✨</div>
-                <h3>Benefits of Paying Zakat</h3>
-                <ul className="home-learn-list">
-                  <li>✅ Purifies wealth and income</li>
-                  <li>✅ Helps people in need</li>
-                  <li>✅ Strengthens the Muslim community</li>
-                  <li>✅ Encourages financial discipline</li>
-                  <li>✅ Brings blessings (barakah)</li>
-                </ul>
-              </article>
-            </div>
           </section>
         </main>
       </div>
-      <SidebarDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} />
+
+      {/* ======================
+    ABOUT MODAL
+====================== */}
+      {showAboutModal && (
+        <div className="modal-overlay">
+
+          <div className="about-modal">
+
+            <button
+              className="close-btn"
+              onClick={() =>
+                setShowAboutModal(false)
+              }
+            >
+              ✕
+            </button>
+
+            <h2>
+              About Zakat
+            </h2>
+
+            <div className="about-grid">
+
+              <div className="about-box">
+                <h3>
+                  What Is Zakat?
+                </h3>
+
+                <p>
+                  Zakat is an obligatory
+                  charity for Muslims
+                  who meet the nisab
+                  threshold. It purifies
+                  wealth and helps
+                  people in need.
+                </p>
+              </div>
+
+              <div className="about-box">
+                <h3>
+                  What Is Business
+                  Zakat?
+                </h3>
+
+                <p>
+                  Business zakat is
+                  zakat imposed on
+                  profits, savings,
+                  and business assets
+                  after reaching
+                  nisab and haul.
+                </p>
+              </div>
+
+              <div className="about-box">
+                <h3>
+                  Why We Pay Zakat?
+                </h3>
+
+                <p>
+                  Zakat is paid to
+                  fulfil Islamic
+                  obligations,
+                  purify wealth,
+                  and support
+                  asnaf groups.
+                </p>
+              </div>
+
+              <div className="about-box">
+                <h3>
+                  Benefits of Zakat
+                </h3>
+
+                <p>
+                  ✔ Purifies wealth
+                  <br />
+                  ✔ Helps the poor
+                  <br />
+                  ✔ Strengthens society
+                  <br />
+                  ✔ Gains blessings
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      )}
+
+      {/* ======================
+          ASNAF MODAL
+      ====================== */}
+      {showAsnafModal && (
+
+        <div className="modal-overlay">
+
+          <div className="about-modal">
+
+            <button
+              className="close-btn"
+              onClick={() =>
+                setShowAsnafModal(false)
+              }
+            >
+              ✕
+            </button>
+
+            <h2>
+              Asnaf Zakat
+            </h2>
+
+            <div className="asnaf-container">
+
+              {/* LEFT MENU */}
+              <div className="asnaf-sidebar">
+
+                {[
+                  "Fakir",
+                  "Miskin",
+                  "Amil",
+                  "Muallaf",
+                  "Riqab",
+                  "Gharimin",
+                  "Fisabilillah",
+                  "Ibn Sabil",
+                ].map((item) => (
+
+                  <button
+                    key={item}
+                    className={`asnaf-tab ${selectedAsnaf === item
+                      ? "active"
+                      : ""
+                      }`}
+                    onClick={() =>
+                      setSelectedAsnaf(item)
+                    }
+                  >
+                    {item}
+                  </button>
+
+                ))}
+
+              </div>
+
+              {/* RIGHT CONTENT */}
+              <div className="asnaf-content">
+
+                <h2>
+                  {selectedAsnaf}
+                </h2>
+
+                <p>
+                  {selectedAsnaf ===
+                    "Fakir" &&
+                    "A poor Muslim who has no income or insufficient means to meet basic daily needs."}
+
+                  {selectedAsnaf ===
+                    "Miskin" &&
+                    "A Muslim with limited income that is insufficient to support essential living expenses."}
+
+                  {selectedAsnaf ===
+                    "Amil" &&
+                    "Individuals appointed to manage and distribute zakat funds."}
+
+                  {selectedAsnaf ===
+                    "Muallaf" &&
+                    "New Muslims or individuals whose hearts are inclined towards Islam."}
+
+                  {selectedAsnaf ===
+                    "Riqab" &&
+                    "People seeking freedom from bondage or oppression."}
+
+                  {selectedAsnaf ===
+                    "Gharimin" &&
+                    "Muslims burdened by debt for essential and lawful needs."}
+
+                  {selectedAsnaf ===
+                    "Fisabilillah" &&
+                    "People striving in the cause of Allah for community benefit."}
+
+                  {selectedAsnaf ===
+                    "Ibn Sabil" &&
+                    "Travelers stranded and needing temporary financial assistance."}
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      )}
+
+      {/* ======================
+    NISAB MODAL
+====================== */}
+      {showNisabModal && (
+
+        <div
+          className="modal-overlay"
+          onClick={() =>
+            setShowNisabModal(
+              false
+            )
+          }
+        >
+
+          <div
+            className="nisab-modal"
+            onClick={(e) =>
+              e.stopPropagation()
+            }
+          >
+
+            <button
+              className="close-btn"
+              onClick={() =>
+                setShowNisabModal(
+                  false
+                )
+              }
+            >
+              ✕
+            </button>
+
+            <h2>
+              What is Nisab?
+            </h2>
+
+            <p>
+              Nisab is the minimum
+              amount of wealth a
+              Muslim must own
+              before being
+              obligated to pay
+              zakat.
+            </p>
+
+            <div
+              className="
+        nisab-info-grid"
+            >
+
+              <div>
+                <span>
+                  Gold Price
+                </span>
+
+                <strong>
+                  RM {goldPrice}/g
+                </strong>
+              </div>
+
+              <div>
+                <span>
+                  Nisab
+                  Threshold
+                </span>
+
+                <strong>
+                  RM{" "}
+                  {nisabValue.toLocaleString()}
+                </strong>
+              </div>
+
+              <div>
+                <span>
+                  Zakat Rate
+                </span>
+
+                <strong>
+                  2.5%
+                </strong>
+              </div>
+
+            </div>
+
+            <div
+              className="
+        formula-box"
+            >
+              <h4>
+                Business
+                Zakat Formula
+              </h4>
+
+              <p>
+                Total Business
+                Asset −
+                Liabilities
+              </p>
+
+              <strong>
+                If amount ≥
+                Nisab →
+                2.5% zakat
+              </strong>
+
+            </div>
+
+          </div>
+
+        </div>
+      )}
+
+      {/* SIDEBAR */}
+      <SidebarDrawer
+        isOpen={
+          isDrawerOpen
+        }
+        onClose={() =>
+          setIsDrawerOpen(
+            false
+          )
+        }
+      />
     </>
   );
 }

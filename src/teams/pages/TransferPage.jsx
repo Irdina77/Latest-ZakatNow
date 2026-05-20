@@ -2,57 +2,97 @@ import React from "react";
 import { motion } from "framer-motion";
 import TransferStatusCard from "../../../src/teams/components/TransferStatusCard";
 
-export default function TransferPage({ transfer, onBack }) {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.1,
-      },
-    },
-  };
+export default function TransferPage({
+  transfer,
+  onBack,
+}) {
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut",
-      },
-    },
+  // GET USER DATA
+
+  const savedFullName =
+    localStorage.getItem(
+      "registeredFullName"
+    );
+
+  const zakatAmount =
+    localStorage.getItem(
+      "zakatAmount"
+    );
+
+  const selectedBank =
+    localStorage.getItem(
+      "selectedBank"
+    );
+
+  // MERGE TRANSFER DATA
+
+  const transferData = {
+    ...transfer,
+
+    fullName:
+      transfer?.fullName ||
+      savedFullName,
+
+    amount:
+      transfer?.amount ||
+      zakatAmount,
+
+    bankName:
+      transfer?.bankName ||
+      selectedBank,
   };
 
   return (
     <motion.div
       className="transfer-page-container"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4 }}
     >
-      <motion.div className="transfer-page-header" variants={itemVariants}>
-        <div className="header-content">
-          <motion.div
-            className="success-icon-container"
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-          >
-            ✓
-          </motion.div>
-          <h1 className="page-title transfer-page-title">Transfer Status</h1>
-        </div>
-        <p className="page-subtitle transfer-page-subtitle">
-          Your zakat transfer is being processed securely. Review the confirmation details below.
-        </p>
-      </motion.div>
+      {/* PAYMENT STEP */}
 
-      <motion.div className="transfer-page-shell" variants={itemVariants}>
-        <TransferStatusCard transfer={transfer} onBack={onBack} />
-      </motion.div>
+      <div className="zakat-stepper">
+        <div className="zakat-step done">
+          <div className="zakat-step-circle">
+            ✓
+          </div>
+          <span>Calculator</span>
+        </div>
+
+        <div className="zakat-step-line"></div>
+
+        <div className="zakat-step done">
+          <div className="zakat-step-circle">
+            ✓
+          </div>
+          <span>Result</span>
+        </div>
+
+        <div className="zakat-step-line"></div>
+
+        <div className="zakat-step done">
+          <div className="zakat-step-circle">
+            ✓
+          </div>
+          <span>Payment</span>
+        </div>
+
+        <div className="zakat-step-line"></div>
+
+        <div className="zakat-step active">
+          <div className="zakat-step-circle">
+            4
+          </div>
+          <span>Receipt</span>
+        </div>
+      </div>
+
+      {/* RECEIPT */}
+
+      <TransferStatusCard
+        transfer={transferData}
+        onBack={onBack}
+      />
     </motion.div>
   );
 }

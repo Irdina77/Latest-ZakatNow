@@ -5,13 +5,26 @@ import { getTranslationSection } from "../translations/translations";
 import ResultCard from "../../../src/teams/components/ResultCard";
 import ActionButtons from "../../../src/teams/components/ActionButtons";
 
-export default function ResultPage({ result, onSave, onReset, onProceed }) {
+export default function ResultPage({
+  result,
+  onSave,
+  onReset,
+  onProceed,
+}) {
   const { language } = useLanguage();
-  const t = getTranslationSection(language, 'resultPage');
+
+  const t =
+    getTranslationSection(
+      language,
+      "resultPage"
+    );
+
   const containerVariants = {
     hidden: { opacity: 0 },
+
     visible: {
       opacity: 1,
+
       transition: {
         staggerChildren: 0.15,
         delayChildren: 0.1,
@@ -20,10 +33,15 @@ export default function ResultPage({ result, onSave, onReset, onProceed }) {
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: {
+      opacity: 0,
+      y: 20,
+    },
+
     visible: {
       opacity: 1,
       y: 0,
+
       transition: {
         duration: 0.6,
         ease: "easeOut",
@@ -38,15 +56,25 @@ export default function ResultPage({ result, onSave, onReset, onProceed }) {
       initial="hidden"
       animate="visible"
     >
-      <motion.div variants={itemVariants}>
-        <h1 className="page-title result-page-title">{t.zakatResult}</h1>
+      <motion.div
+        variants={itemVariants}
+      >
+        <h1 className="page-title result-page-title">
+          {t.zakatResult}
+        </h1>
       </motion.div>
 
-      <motion.div variants={itemVariants}>
-        <ResultCard result={result} />
+      <motion.div
+        variants={itemVariants}
+      >
+        <ResultCard
+          result={result}
+        />
       </motion.div>
 
-      <motion.div variants={itemVariants}>
+      <motion.div
+        variants={itemVariants}
+      >
         <ActionButtons
           onSave={onSave}
           onReset={onReset}

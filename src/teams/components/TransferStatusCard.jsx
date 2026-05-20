@@ -1,168 +1,144 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
-export default function TransferStatusCard({ transfer, onBack }) {
-  const cardVariants = {
-    hidden: { opacity: 0, scale: 0.95 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: { duration: 0.5, ease: "easeOut" },
-    },
-    hover: {
-      y: -8,
-      transition: { duration: 0.3, ease: "easeOut" },
-    },
-  };
+export default function TransferStatusCard({
+  transfer,
+  onBack,
+}) {
 
-  const rowVariants = {
-    hidden: { opacity: 0, x: -20 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.4, ease: "easeOut" },
-    },
-  };
+  const navigate = useNavigate();
 
-  const containerVariants = {
-    visible: {
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
-    },
-  };
-
-  const pulseVariants = {
-    pulse: {
-      scale: [1, 1.05, 1],
-      transition: { duration: 2, repeat: Infinity },
-    },
-  };
+  const currentDate =
+    new Date().toLocaleString("en-MY", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
   return (
     <motion.div
-      className="card transfer-card transfer-card-premium"
-      variants={cardVariants}
-      initial="hidden"
-      animate="visible"
-      whileHover="hover"
+      className="receipt-card"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
     >
-      <motion.div
-        className="transfer-card-top premium-transfer-header"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-      >
-        <div>
-          <h2 className="card-title transfer-card-title">Bank to Zakat Transfer</h2>
-          <p className="transfer-card-subtitle">
-            Confirm your payment details and receive premium transfer confirmation.
-          </p>
+      {/* SUCCESS HEADER */}
+
+      <div className="receipt-header">
+        <div className="receipt-checkmark">
+          ✓
         </div>
-        <motion.span
-          className="status-badge premium-success-badge status-success"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.5, ease: "easeOut" }}
-        >
-          <span className="badge-checkmark">✓</span>
-          <span className="badge-text">{transfer.status}</span>
-        </motion.span>
-      </motion.div>
 
-      <motion.div
-        className="transfer-details-grid premium-transfer-grid"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <motion.div className="transfer-detail-row premium-transfer-row" variants={rowVariants}>
-          <div className="transfer-icon">🔐</div>
-          <div className="transfer-detail-content">
-            <span className="label">Transfer ID</span>
-            <span className="value">{transfer.transferId}</span>
-          </div>
-        </motion.div>
+        <h2 className="receipt-title">
+          Payment Successful!
+        </h2>
 
-        <motion.div className="transfer-detail-row premium-transfer-row" variants={rowVariants}>
-          <div className="transfer-icon">🏦</div>
-          <div className="transfer-detail-content">
-            <span className="label">Bank</span>
-            <span className="value">{transfer.bankName}</span>
-          </div>
-        </motion.div>
+        <p className="receipt-subtitle">
+          Thank you, your zakat payment
+          has been completed.
+        </p>
+      </div>
 
-        <motion.div className="transfer-detail-row premium-transfer-row" variants={rowVariants}>
-          <div className="transfer-icon">🕌</div>
-          <div className="transfer-detail-content">
-            <span className="label">Zakat Organization</span>
-            <span className="value">{transfer.zakatOrganization}</span>
-          </div>
-        </motion.div>
+      {/* RECEIPT DETAILS */}
 
-        <motion.div className="transfer-detail-row premium-transfer-row last-row" variants={rowVariants}>
-          <div className="transfer-icon">✓</div>
-          <div className="transfer-detail-content">
-            <span className="label">Current Status</span>
-            <span className="value status-success transfer-status-value">{transfer.status}</span>
-          </div>
-        </motion.div>
-      </motion.div>
-
-      <motion.div
-        className="transfer-notice-box premium-transfer-notice"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.6 }}
-        whileHover={{ y: -2 }}
-      >
-        <div className="notice-icon">🔒</div>
-        <div className="notice-content">
-          <p className="notice-title">Secure Transfer Confirmation</p>
-          <p>
-            Your transfer is secured and monitored with premium zakat settlement flow. Expect instant confirmation once the transfer clears.
-          </p>
+      <div className="receipt-body">
+        <div className="receipt-row">
+          <span>Name</span>
+          <strong>
+            {localStorage.getItem(
+              "registeredFullName"
+            ) ||
+              transfer?.fullName ||
+              transfer?.name ||
+              "User"}
+          </strong>
         </div>
-      </motion.div>
 
-      <motion.div
-        className="transfer-success-badges premium-transfer-badges"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.7 }}
-        variants={containerVariants}
-      >
-        <motion.div className="transfer-badge" variants={rowVariants}>
-          <span className="badge-icon">✓</span>
-          <span className="badge-label">Payment Successfully Processed</span>
-        </motion.div>
-        <motion.div className="transfer-badge" variants={rowVariants}>
-          <span className="badge-icon">⚡</span>
-          <span className="badge-label">Instant Confirmation</span>
-        </motion.div>
-        <motion.div className="transfer-badge" variants={rowVariants}>
-          <span className="badge-icon">🔐</span>
-          <span className="badge-label">Trusted Secure Transfer</span>
-        </motion.div>
-      </motion.div>
+        <div className="receipt-row">
+          <span>Zakat Type</span>
+          <strong>
+            {transfer?.zakatType ||
+              "Business Zakat"}
+          </strong>
+        </div>
 
-      <motion.div
-        className="button-group premium-transfer-button"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8 }}
-      >
-        <motion.button
-          className="btn btn-dark btn-gradient premium-back-btn"
-          onClick={onBack}
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
+        <div className="receipt-row">
+          <span>Bank</span>
+          <strong>
+            {transfer?.bankName ||
+              transfer?.selectedBank ||
+              localStorage.getItem(
+                "selectedBank"
+              ) ||
+              "No Bank Selected"}
+          </strong>
+        </div>
+
+        <div className="receipt-row">
+          <span>Amount Paid</span>
+          <strong className="receipt-amount">
+            RM{" "}
+            {Number(
+              transfer?.amount ||
+              localStorage.getItem(
+                "zakatAmount"
+              ) ||
+              0
+            ).toLocaleString("en-MY", {
+              minimumFractionDigits: 2,
+            })}
+          </strong>
+        </div>
+
+        <div className="receipt-row">
+          <span>Ref No.</span>
+          <strong>
+            {transfer?.transferId ||
+              "TRF-2026-001"}
+          </strong>
+        </div>
+
+        <div className="receipt-row">
+          <span>Date & Time</span>
+          <strong>
+            {currentDate}
+          </strong>
+        </div>
+      </div>
+
+      {/* RECEIPT NOTE */}
+
+      <div className="receipt-note">
+        This receipt is computer
+        generated and no signature
+        is required.
+      </div>
+
+      {/* BUTTONS */}
+
+      <div className="receipt-button-group">
+        <button
+          className="btn btn-outline"
+          onClick={() =>
+            navigate("/dashboard")
+          }
         >
-          <span className="btn-icon">←</span>
-          <span className="btn-text">Back to Result</span>
-        </motion.button>
-      </motion.div>
+          Go to Dashboard
+        </button>
+
+        <button
+          className="btn btn-gold"
+          onClick={() =>
+            window.print()
+          }
+        >
+          Download Receipt
+        </button>
+      </div>
+
     </motion.div>
   );
 }

@@ -66,14 +66,28 @@ const SidebarDrawer = ({ isOpen, onClose }) => {
     }
   }, [language]);
 
-  const menuItems = [
-    { id: 'dashboard', label: t.home, icon: '🏠', path: '/dashboard' },
-    { id: 'calculator', label: t.zakatCalculator, icon: '🧮', path: '/calculator' },
-    { id: 'nisab', label: t.annualNisab, icon: '💠', path: '/nisab' },
-    { id: 'profile', label: t.profile, icon: '👤', action: 'profile' },
-    { id: 'settings', label: t.settings, icon: '⚙️', action: 'settings' },
-    { id: 'logout', label: t.logOut, icon: '🚪', action: 'logout' }
-  ];
+const menuItems = [
+  {
+    id: "profile",
+    label: t.profile,
+    icon: "👤",
+    action: "profile",
+  },
+
+  {
+    id: "settings",
+    label: t.settings,
+    icon: "⚙️",
+    action: "settings",
+  },
+
+  {
+    id: "logout",
+    label: t.logOut,
+    icon: "🚪",
+    action: "logout",
+  },
+];
 
   const handleMenuClick = (item) => {
     if (item.action === 'profile') {

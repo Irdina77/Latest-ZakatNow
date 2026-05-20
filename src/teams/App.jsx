@@ -205,7 +205,7 @@ export default function App() {
       if (
         !result ||
         Number(result.zakatAmount) <=
-          0
+        0
       ) {
         alert(
           "Please calculate zakat first."
@@ -247,243 +247,234 @@ export default function App() {
 
         nisabStatus:
           calculatorResult.total >=
-          calculatorResult.nisab
+            calculatorResult.nisab
             ? "Eligible"
             : "Not Eligible",
 
         method:
           calculatorResult.businessMethod ===
-          "UntungRugi"
+            "UntungRugi"
             ? "Profit & Loss"
             : "Working Capital",
       };
 
       setResult(newResult);
 
+      // auto update payment amount
+      setPayment((prev) => ({
+        ...prev,
+        amount:
+          Number(
+            calculatorResult.zakat
+          ) || 0,
+      }));
+
       localStorage.setItem(
         "zakat-result",
         JSON.stringify(newResult)
       );
+
+      // terus pergi payment
+      navigate("/payment");
     };
 
   return (
     <LanguageProvider>
       <Routes>
-      {/* LOGIN */}
-      <Route
-        path="/login"
-        element={
-          <Login
-            onLoginSuccess={
-              handleLoginSuccess
-            }
-          />
-        }
-      />
+        {/* LOGIN */}
+        <Route
+          path="/login"
+          element={
+            <Login
+              onLoginSuccess={
+                handleLoginSuccess
+              }
+            />
+          }
+        />
 
-      {/* REGISTER */}
-      <Route
-        path="/register"
-        element={
-          <Register
-            onRegisterSuccess={
-              handleRegisterSuccess
-            }
-          />
-        }
-      />
+        {/* REGISTER */}
+        <Route
+          path="/register"
+          element={
+            <Register
+              onRegisterSuccess={
+                handleRegisterSuccess
+              }
+            />
+          }
+        />
 
-      {/* ROOT */}
-      <Route
-        path="/"
-        element={
-          isLoggedIn ? (
-            userRole === "admin" ? (
-              <Navigate
-                to="/admin/dashboard"
-                replace
-              />
+        {/* ROOT */}
+        <Route
+          path="/"
+          element={
+            isLoggedIn ? (
+              userRole === "admin" ? (
+                <Navigate
+                  to="/admin/dashboard"
+                  replace
+                />
+              ) : (
+                <Navigate
+                  to="/dashboard"
+                  replace
+                />
+              )
             ) : (
               <Navigate
-                to="/dashboard"
+                to="/login"
                 replace
               />
             )
-          ) : (
+          }
+        />
+
+        {/* USER */}
+        <Route
+          path="/dashboard"
+          element={
+            isLoggedIn ? (
+              <HomePage />
+            ) : (
+              <Navigate
+                to="/login"
+                replace
+              />
+            )
+          }
+        />
+
+        <Route
+          path="/calculator"
+          element={
+            isLoggedIn ? (
+              <ZakatCalculator
+                onComplete={
+                  handleCalculatorComplete
+                }
+              />
+            ) : (
+              <Navigate
+                to="/login"
+                replace
+              />
+            )
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            isLoggedIn ? (
+              <Profile />
+            ) : (
+              <Navigate
+                to="/login"
+                replace
+              />
+            )
+          }
+        />
+
+        <Route
+          path="/nisab"
+          element={
+            isLoggedIn ? (
+              <NisabPage />
+            ) : (
+              <Navigate
+                to="/login"
+                replace
+              />
+            )
+          }
+        />
+
+        <Route
+          path="/payment"
+          element={
+            isLoggedIn ? (
+              <PaymentPage
+                payment={payment}
+                onPay={
+                  handlePaymentSuccess
+                }
+                onBack={() =>
+                  navigate("/result")
+                }
+              />
+            ) : (
+              <Navigate
+                to="/login"
+                replace
+              />
+            )
+          }
+        />
+
+        <Route
+          path="/transfer"
+          element={
+            isLoggedIn ? (
+              <TransferPage
+                transfer={transfer}
+              />
+            ) : (
+              <Navigate
+                to="/login"
+                replace
+              />
+            )
+          }
+        />
+
+        {/* ADMIN */}
+        <Route
+          path="/admin/dashboard"
+          element={
+            isLoggedIn &&
+              userRole === "admin" ? (
+              <Dashboard
+                onLogout={
+                  handleLogout
+                }
+              />
+            ) : (
+              <Navigate
+                to="/login"
+                replace
+              />
+            )
+          }
+        />
+
+        <Route
+          path="/admin/nisab"
+          element={
+            isLoggedIn &&
+              userRole === "admin" ? (
+              <UpdateNisabRate />
+            ) : (
+              <Navigate
+                to="/login"
+                replace
+              />
+            )
+          }
+        />
+
+        {/* FALLBACK */}
+        <Route
+          path="*"
+          element={
             <Navigate
-              to="/login"
+              to="/"
               replace
             />
-          )
-        }
-      />
-
-      {/* USER */}
-      <Route
-        path="/dashboard"
-        element={
-          isLoggedIn ? (
-            <HomePage />
-          ) : (
-            <Navigate
-              to="/login"
-              replace
-            />
-          )
-        }
-      />
-
-      <Route
-        path="/calculator"
-        element={
-          isLoggedIn ? (
-            <ZakatCalculator
-              onComplete={
-                handleCalculatorComplete
-              }
-            />
-          ) : (
-            <Navigate
-              to="/login"
-              replace
-            />
-          )
-        }
-      />
-
-      <Route
-        path="/profile"
-        element={
-          isLoggedIn ? (
-            <Profile />
-          ) : (
-            <Navigate
-              to="/login"
-              replace
-            />
-          )
-        }
-      />
-
-      <Route
-        path="/nisab"
-        element={
-          isLoggedIn ? (
-            <NisabPage />
-          ) : (
-            <Navigate
-              to="/login"
-              replace
-            />
-          )
-        }
-      />
-
-      <Route
-        path="/result"
-        element={
-          isLoggedIn ? (
-            <ResultPage
-              result={result}
-              onSave={handleSave}
-              onReset={handleReset}
-              onProceed={
-                handleProceedToPayment
-              }
-            />
-          ) : (
-            <Navigate
-              to="/login"
-              replace
-            />
-          )
-        }
-      />
-
-      <Route
-        path="/payment"
-        element={
-          isLoggedIn ? (
-            <PaymentPage
-              payment={payment}
-              onPay={
-                handlePaymentSuccess
-              }
-              onBack={() =>
-                navigate("/result")
-              }
-            />
-          ) : (
-            <Navigate
-              to="/login"
-              replace
-            />
-          )
-        }
-      />
-
-      <Route
-        path="/transfer"
-        element={
-          isLoggedIn ? (
-            <TransferPage
-              transfer={transfer}
-            />
-          ) : (
-            <Navigate
-              to="/login"
-              replace
-            />
-          )
-        }
-      />
-
-      {/* ADMIN */}
-      <Route
-        path="/admin/dashboard"
-        element={
-          isLoggedIn &&
-          userRole === "admin" ? (
-            <Dashboard
-              onLogout={
-                handleLogout
-              }
-            />
-          ) : (
-            <Navigate
-              to="/login"
-              replace
-            />
-          )
-        }
-      />
-
-      <Route
-        path="/admin/nisab"
-        element={
-          isLoggedIn &&
-          userRole === "admin" ? (
-            <UpdateNisabRate />
-          ) : (
-            <Navigate
-              to="/login"
-              replace
-            />
-          )
-        }
-      />
-
-      {/* FALLBACK */}
-      <Route
-        path="*"
-        element={
-          <Navigate
-            to="/"
-            replace
-          />
-        }
-      />
-    </Routes>
+          }
+        />
+      </Routes>
     </LanguageProvider>
   );
 }

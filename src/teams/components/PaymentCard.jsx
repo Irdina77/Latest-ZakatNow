@@ -8,8 +8,11 @@ import rhbLogo from "../assets/rhb.png";
 import publicBankLogo from "../assets/publicbank.png";
 import hongleongLogo from "../assets/hongleong.png";
 import bsnLogo from "../assets/bsn.png";
+import fpxLogo from "../assets/fpx.jpg";
+import jompayLogo from "../assets/jompay.png";
+import duitnowLogo from "../assets/duitnow.jpg";
 
-const gatewayOptions = ["FPX Online Banking", "JomPay"];
+const gatewayOptions = ["FPX Online Banking", "JomPay", "DuitNow QR"];
 const bankingTypes = ["Personal Banking", "Corporate Banking"];
 
 const bankOptions = [
@@ -84,10 +87,10 @@ export default function PaymentCard({ payment, onPay, onBack }) {
   const amountNumber =
     Number(
       payment?.amount ||
-        payment?.zakatAmount ||
-        payment?.zakat ||
-        payment?.totalZakat ||
-        0
+      payment?.zakatAmount ||
+      payment?.zakat ||
+      payment?.totalZakat ||
+      0
     ) || 0;
 
   const amountText = amountNumber.toLocaleString("en-MY", {
@@ -102,7 +105,24 @@ export default function PaymentCard({ payment, onPay, onBack }) {
 
   const handleConfirm = () => {
     setShowConfirm(false);
-    setStep(selectedGateway === "FPX Online Banking" ? "fpx" : "jompay");
+
+    if (
+      selectedGateway ===
+      "FPX Online Banking"
+    ) {
+      setStep("fpx");
+    }
+
+    else if (
+      selectedGateway ===
+      "JomPay"
+    ) {
+      setStep("jompay");
+    }
+
+    else {
+      setStep("duitnow");
+    }
   };
 
   const completePayment = (event) => {
@@ -165,42 +185,80 @@ export default function PaymentCard({ payment, onPay, onBack }) {
           </div>
 
           <div className="gateway-grid">
-            {gatewayOptions.map((gateway) => (
-              <button
-                key={gateway}
-                type="button"
-                className={`gateway-option ${
-                  selectedGateway === gateway ? "selected" : ""
-                }`}
-                onClick={() => setSelectedGateway(gateway)}
-              >
-                <span className="gateway-check">
-                  {selectedGateway === gateway ? "✓" : ""}
-                </span>
 
-                <div
-                  className={
-                    gateway === "FPX Online Banking"
-                      ? "gateway-logo fpx-logo"
-                      : "gateway-logo jompay-logo"
+            {gatewayOptions.map(
+              (gateway) => (
+
+                <button
+                  key={gateway}
+                  type="button"
+                  className={`gateway-option ${selectedGateway ===
+                    gateway
+                    ? "selected"
+                    : ""
+                    }`}
+                  onClick={() =>
+                    setSelectedGateway(
+                      gateway
+                    )
                   }
                 >
-                  {gateway === "FPX Online Banking" ? "FPX" : "JomPAY"}
-                </div>
+                  {gateway ===
+                    "FPX Online Banking" && (
+                      <div className="recommended-tag">
+                        <span className="recommended-icon">
+                          ☆
+                        </span>
 
-                <strong>
-                  {gateway === "FPX Online Banking"
-                    ? "Pay via FPX"
-                    : "Pay via JomPay"}
-                </strong>
+                        Recommended
+                      </div>
+                    )}
 
-                <small>
-                  {gateway === "FPX Online Banking"
-                    ? "Fast online banking"
-                    : "Biller code payment"}
-                </small>
-              </button>
-            ))}
+                  <span className="gateway-check">
+                    {selectedGateway ===
+                      gateway
+                      ? "✓"
+                      : ""}
+                  </span>
+
+                  <div className="gateway-image">
+                    <img
+                      src={
+                        gateway === "FPX Online Banking"
+                          ? fpxLogo
+                          : gateway === "JomPay"
+                            ? jompayLogo
+                            : duitnowLogo
+                      }
+                      alt={gateway}
+                      className="gateway-logo"
+                    />
+                  </div>
+
+                  <strong>
+                    {selectedGateway ===
+                      "FPX Online Banking"
+                      ? selectedBank
+                      : selectedGateway ===
+                        "JomPay"
+                        ? "JomPay"
+                        : "DuitNow QR"}
+                  </strong>
+
+                  <small>
+                    {gateway ===
+                      "FPX Online Banking"
+                      ? "Fast online banking"
+                      : gateway ===
+                        "JomPay"
+                        ? "Biller code payment"
+                        : "Secure QR payment"}
+                  </small>
+
+                </button>
+              )
+            )}
+
           </div>
 
           <div className="payment-summary-box">
@@ -216,17 +274,23 @@ export default function PaymentCard({ payment, onPay, onBack }) {
           </div>
 
           <div className="payment-actions premium-payment-actions">
+
+            <button
+              className="btn premium-back-btn"
+              type="button"
+              onClick={onBack}
+            >
+              ← Back
+            </button>
+
             <button
               className="btn premium-pay-btn"
               type="button"
               onClick={() => setShowConfirm(true)}
             >
-              💳 Pay Zakat
+              Pay Zakat
             </button>
 
-            <button className="btn premium-back-btn" type="button" onClick={onBack}>
-              ← Back
-            </button>
           </div>
         </>
       )}
@@ -276,9 +340,8 @@ export default function PaymentCard({ payment, onPay, onBack }) {
               <button
                 key={bank.name}
                 type="button"
-                className={`bank-tile ${
-                  selectedBank === bank.name ? "selected" : ""
-                }`}
+                className={`bank-tile ${selectedBank === bank.name ? "selected" : ""
+                  }`}
                 onClick={() => setSelectedBank(bank.name)}
               >
                 <img src={bank.logo} alt={bank.name} className="real-bank-logo" />
@@ -430,9 +493,104 @@ export default function PaymentCard({ payment, onPay, onBack }) {
               ← Choose Another Method
             </button>
 
-            <button className="btn premium-pay-btn" type="button" onClick={completePayment}>
-              Confirm Payment
+            <button
+              className="btn premium-pay-btn"
+              type="button"
+              onClick={() => {
+                alert(
+                  "Please complete payment in your banking app using the Biller Code."
+                );
+                completePayment();
+              }}
+            >
+              ✓ I Have Paid
             </button>
+          </div>
+        </>
+      )}
+
+      {step === "duitnow" && (
+        <>
+          <div className="jompay-card-real">
+
+            <div className="duitnow-head">
+              <strong>
+                DuitNow QR
+              </strong>
+
+              <span>
+                Scan & Pay
+              </span>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent:
+                  "center",
+                margin:
+                  "30px 0",
+              }}
+            >
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=ZakatNow-RM${amountText}`} alt="DuitNow QR"
+                style={{
+                  width: "230px",
+                  borderRadius:
+                    "20px",
+                  boxShadow:
+                    "0 12px 30px rgba(0,0,0,0.15)",
+                }}
+              />
+            </div>
+
+            <div className="payment-summary-box">
+              <div>
+                <span>
+                  Amount
+                </span>
+
+                <strong>
+                  RM {amountText}
+                </strong>
+              </div>
+
+              <div>
+                <span>
+                  Payment Method
+                </span>
+
+                <strong>
+                  DuitNow QR
+                </strong>
+              </div>
+            </div>
+
+            <div className="payment-actions premium-payment-actions">
+
+              <button
+                className="btn premium-back-btn"
+                type="button"
+                onClick={() =>
+                  setStep(
+                    "gateway"
+                  )
+                }
+              >
+                ← Back
+              </button>
+
+              <button
+                className="btn premium-pay-btn"
+                type="button"
+                onClick={
+                  completePayment
+                }
+              >
+                ✓ I Have Paid
+              </button>
+
+            </div>
           </div>
         </>
       )}

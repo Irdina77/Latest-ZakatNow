@@ -1,285 +1,719 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
 import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
 import { useLanguage } from "../context/LanguageContext";
 import { getTranslationSection } from "../translations/translations";
+
 import "../Styles/Dashboard.css";
 import zakatIcon from "../../teams/assets/zakat-icon.webp";
+
 import Chatbot from "../components/Chatbot";
 import SidebarDrawer from "../components/SidebarDrawer";
 
-function ActivityIcon({ type }) {
-  if (type === "success") return <span className="dashboard-icon">✔️</span>;
-  if (type === "user") return <span className="dashboard-icon">👤</span>;
-  if (type === "calc") return <span className="dashboard-icon">🧮</span>;
-  if (type === "nisab") return <span className="dashboard-icon">💰</span>;
-  return <span className="dashboard-icon">⚠️</span>;
-}
-
 export default function Dashboard({
-  currentNisab,
-  currentNisabUpdatedAt,
-  totalUsers,
-  zakatThisYear,
-  successfulPayments,
-  pendingPayments,
-  users,
-  calculations,
-  payments,
-  activities,
-  onGoNisab,
+  currentNisab = {
+    value: 42500,
+    year: 2026,
+  },
 }) {
   const navigate = useNavigate();
-  const { language } = useLanguage();
-  const t = getTranslationSection(language, 'homepage');
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [openPanel, setOpenPanel] = useState(null);
-  const [showSettingMenu, setShowSettingMenu] = useState(false);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [userName, setUserName] = useState('Valued User');
-  const [userEmail, setUserEmail] = useState('');
-  const settingMenuRef = useRef(null);
 
+  const {
+    language,
+    updateLanguage,
+  } = useLanguage();
+
+  const t =
+    getTranslationSection(
+      language,
+      "homepage"
+    );
+
+  const [isDrawerOpen,
+    setIsDrawerOpen] =
+    useState(false);
+
+  const [showLogoMenu,
+    setShowLogoMenu] =
+    useState(false);
+
+  const [showAboutModal,
+    setShowAboutModal] =
+    useState(false);
+
+  const [showAsnafModal,
+    setShowAsnafModal] =
+    useState(false);
+
+  const [selectedAsnaf,
+    setSelectedAsnaf] =
+    useState("Fakir");
+
+  const [userName,
+    setUserName] =
+    useState("Valued User");
+
+  const [userEmail,
+    setUserEmail] =
+    useState("");
+
+  const menuRef =
+    useRef(null);
+
+  // ======================
+  // USER AUTH
+  // ======================
   useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-    return () => clearInterval(timer);
+    const unsubscribe =
+      onAuthStateChanged(
+        auth,
+        (user) => {
+          if (user) {
+            const email =
+              user.email || "";
+
+            const displayName =
+              user.displayName?.trim();
+
+            const username =
+              email.split("@")[0];
+
+            setUserEmail(
+              email
+            );
+
+            setUserName(
+              displayName ||
+              (username
+                ? username.charAt(
+                  0
+                ).toUpperCase() +
+                username.slice(
+                  1
+                )
+                : "Valued User")
+            );
+          }
+        }
+      );
+
+    return () =>
+      unsubscribe();
   }, []);
 
+  // ======================
+  // CLOSE MENU
+  // ======================
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const email = user.email || '';
-        const displayName = user.displayName?.trim();
-        const username = email.split('@')[0];
+    const handleClickOutside =
+      (event) => {
+        if (
+          menuRef.current &&
+          !menuRef.current.contains(
+            event.target
+          )
+        ) {
+          setShowLogoMenu(
+            false
+          );
+        }
+      };
 
-        setUserEmail(email);
-        setUserName(
-          displayName ||
-            (username
-              ? username.charAt(0).toUpperCase() + username.slice(1)
-              : 'Valued User')
-        );
-      } else {
-        setUserName('Valued User');
-        setUserEmail('');
-      }
-    });
+    document.addEventListener(
+      "mousedown",
+      handleClickOutside
+    );
 
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        settingMenuRef.current &&
-        !settingMenuRef.current.contains(event.target)
-      ) {
-        setShowSettingMenu(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutside
+      );
     };
   }, []);
-
-  const formattedDate = currentTime.toLocaleDateString("en-GB", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-
-  const formattedTime = currentTime.toLocaleTimeString("en-GB", {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  });
-
-  const handleLogout = () => {
-    alert("Logout clicked");
-    setShowSettingMenu(false);
-  };
 
   return (
     <>
-      <div className="dashboard-container">
-        {/* 🔥 HEADER */}
-        <header className="zakat-topbar">
-          <div className="zakat-brand">
-            <img
-              src={zakatIcon}
-              alt="logo"
-              className="zakat-brand-logo-img"
-            />
+      <div className="dashboard-page">
+        <header className="premium-navbar">
 
-            <div className="zakat-brand-text">
-              <h1 className="zakat-brand-title">ZakatNow</h1>
+          <div className="navbar-container">
 
-              <div className="zakat-divider">
-                <span></span>
-                <span className="diamond">◆</span>
-                <span></span>
-              </div>
+            {/* LEFT SIDE */}
+            <div className="navbar-left">
 
-              <p className="zakat-brand-subtitle">
-                Calculate your business zakat easily and accurately
-              </p>
+              <button
+                className="navbar-logo-button"
+                onClick={() =>
+                  navigate("/dashboard")
+                }
+              >
+                <img
+                  src={zakatIcon}
+                  alt="logo"
+                  className="navbar-logo"
+                />
+
+                <div>
+                  <span className="navbar-brand-name">
+                    ZakatNow
+                  </span>
+
+                  <p className="navbar-subtitle">
+                    Smart AI-Powered Zakat
+                  </p>
+                </div>
+              </button>
+
             </div>
-          </div>
 
-          <div className="zakat-topbar-actions">
-            <button
-              className="zakat-menu-button"
-              onClick={() => setIsDrawerOpen(true)}
-              aria-label="Open menu"
+            {/* MENU CENTER */}
+            <nav className="premium-nav-menu">
+
+              <button
+                onClick={() =>
+                  navigate("/dashboard")
+                }
+              >
+                HOME PAGE
+              </button>
+
+              <button
+                onClick={() =>
+                  navigate("/calculator")
+                }
+              >
+                CALCULATE ZAKAT
+              </button>
+
+              <button
+                onClick={() =>
+                  navigate("/payment")
+                }
+              >
+                PAY ZAKAT
+              </button>
+
+              <button
+                onClick={() =>
+                  navigate("/check-zakat")
+                }
+              >
+                CHECK ZAKAT
+              </button>
+
+            </nav>
+
+            {/* RIGHT MENU BUTTON */}
+            <div
+              className="navbar-menu-right"
+              ref={menuRef}
             >
-              <span className="hamburger-line"></span>
-              <span className="hamburger-line"></span>
-              <span className="hamburger-line"></span>
-            </button>
+              <button
+                className="sidebar-toggle"
+                onClick={() =>
+                  setShowLogoMenu(
+                    !showLogoMenu
+                  )
+                }
+              >
+                ☰
+              </button>
 
-            <div className="zakat-user-chip">
-              👤 {userName}
+              {showLogoMenu && (
+                <div className="logo-dropdown">
+
+                  <button
+                    onClick={() => {
+                      setShowAboutModal(true);
+                      setShowLogoMenu(false);
+                    }}
+                  >
+                    About Zakat
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setShowAsnafModal(true);
+                      setShowLogoMenu(false);
+                    }}
+                  >
+                    Asnaf Zakat
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      navigate("/profile");
+                      setShowLogoMenu(false);
+                    }}
+                  >
+                    Profile
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      navigate("/settings");
+                      setShowLogoMenu(false);
+                    }}
+                  >
+                    Setting
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      localStorage.clear();
+                      navigate("/");
+                    }}
+                  >
+                    Log Out
+                  </button>
+
+                </div>
+              )}
             </div>
+
           </div>
+
         </header>
 
-        {/* Hero Section */}
+        {/* HERO */}
         <section className="dashboard-hero">
           <div className="hero-card">
+
             <div className="hero-left">
-              <p className="hero-greeting">{t.greeting}</p>
-              <h2 className="hero-username">{userName}</h2>
-              <p className="hero-email">{userEmail}</p>
-              <p className="hero-description">
-                {t.description}
+              <p className="hero-greeting">
+                ASSALAMUALAIKUM,
+                WELCOME BACK
               </p>
+
+              <h2 className="hero-username">
+                {userName}
+              </h2>
+
+              <p className="hero-email">
+                {userEmail}
+              </p>
+
+              <p className="hero-description">
+                {
+                  t.description
+                }
+              </p>
+
               <div className="hero-buttons">
-                <button className="hero-primary-btn" onClick={() => navigate('/calculator')}>
-                  {t.openCalculator}
+
+                <button
+                  className="hero-primary-btn"
+                  onClick={() =>
+                    navigate(
+                      "/calculator"
+                    )
+                  }
+                >
+                  Open
+                  Calculator
                 </button>
-                <button className="hero-secondary-btn" onClick={() => navigate('/nisab')}>
-                  {t.viewNisab}
+
+                <button
+                  className="hero-secondary-btn"
+                  onClick={() =>
+                    navigate(
+                      "/payment"
+                    )
+                  }
+                >
+                  Pay
+                  Zakat
                 </button>
+
               </div>
             </div>
+
             <div className="hero-right">
               <div className="hero-illustration">
-                <div className="illustration-main">🕌</div>
-                <div className="illustration-icons">
-                  <span>🧮</span>
-                  <span>💰</span>
-                  <span>💳</span>
-                  <span>⭐</span>
+
+                <div className="illustration-main">
+                  🕌
                 </div>
+
+                <div className="illustration-icons">
+                  <span>
+                    🧮
+                  </span>
+                  <span>
+                    💰
+                  </span>
+                  <span>
+                    💳
+                  </span>
+                </div>
+
               </div>
             </div>
+
           </div>
         </section>
 
-        {/* Dashboard Summary Cards */}
+        {/* SUMMARY */}
         <section className="dashboard-summary">
           <div className="summary-grid">
+
             <div className="summary-card">
               <div className="summary-icon">
-                <span>💰</span>
+                💰
               </div>
+
               <div className="summary-content">
-                <h3 className="summary-title">Total Nisab</h3>
+                <h3 className="summary-title">
+                  Total
+                  Nisab
+                </h3>
+
                 <p className="summary-value">
-                  RM {Number(currentNisab.value).toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
+                  RM{" "}
+                  {Number(
+                    currentNisab.value
+                  ).toLocaleString()}
                 </p>
               </div>
             </div>
 
             <div className="summary-card">
               <div className="summary-icon">
-                <span>📊</span>
+                📈
               </div>
+
               <div className="summary-content">
-                <h3 className="summary-title">Zakat Rate</h3>
-                <p className="summary-value">2.5%</p>
-                <p className="summary-note">According to Syariah</p>
+                <h3 className="summary-title">
+                  Zakat
+                  Rate
+                </h3>
+
+                <p className="summary-value">
+                  2.5%
+                </p>
               </div>
             </div>
 
             <div className="summary-card">
               <div className="summary-icon">
-                <span>✅</span>
+                ✅
               </div>
+
               <div className="summary-content">
-                <h3 className="summary-title">System Status</h3>
-                <p className="summary-value">Ready to Calculate</p>
-                <p className="summary-note">All systems operational</p>
+                <h3 className="summary-title">
+                  Status
+                </h3>
+
+                <p className="summary-value">
+                  Ready
+                </p>
               </div>
             </div>
+
           </div>
         </section>
 
-        {/* Learn About Zakat Section */}
-        <section className="dashboard-education-section">
-          <div className="dashboard-education-header">
-            <h2 className="dashboard-education-title">Learn About Zakat</h2>
-            <p className="dashboard-education-subtitle">
-              Understand zakat, business zakat, and the benefits of paying zakat.
-            </p>
-          </div>
-
-          <div className="dashboard-education-grid">
-            {/* Card 1: What is Zakat */}
-            <div className="dashboard-education-card">
-              <div className="education-gold-accent"></div>
-              <div className="education-icon-container">
-                <span className="education-icon">💝</span>
-              </div>
-              <h3 className="dashboard-education-card-title">What is Zakat?</h3>
-              <p className="dashboard-education-card-content">
-                Zakat is a compulsory charitable contribution in Islam for Muslims who meet the required financial threshold (nisab). It helps purify wealth and supports those in need, promoting fairness and social welfare in society.
-              </p>
-            </div>
-
-            {/* Card 2: What is Business Zakat */}
-            <div className="dashboard-education-card">
-              <div className="education-gold-accent"></div>
-              <div className="education-icon-container">
-                <span className="education-icon">🏢</span>
-              </div>
-              <h3 className="dashboard-education-card-title">What is Business Zakat?</h3>
-              <p className="dashboard-education-card-content">
-                Business zakat (Zakat Perniagaan) is a mandatory zakat imposed on business assets and profits that meet the nisab requirement. It is calculated annually to ensure businesses contribute fairly to the welfare of the community.
-              </p>
-            </div>
-
-            {/* Card 3: Benefits of Paying Zakat */}
-            <div className="dashboard-education-card">
-              <div className="education-gold-accent"></div>
-              <div className="education-icon-container">
-                <span className="education-icon">✨</span>
-              </div>
-              <h3 className="dashboard-education-card-title">Benefits of Paying Zakat</h3>
-              <div className="dashboard-education-benefits">
-                <div className="benefit-item">✔️ Purifies wealth and income</div>
-                <div className="benefit-item">✔️ Helps people in need</div>
-                <div className="benefit-item">✔️ Strengthens the Muslim community</div>
-                <div className="benefit-item">✔️ Encourages financial discipline</div>
-                <div className="benefit-item">✔️ Brings blessings (barakah) to business</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <footer className="dashboard-footer">
-          © {currentNisab.year} Zakat Organisation Portal
-        </footer>
       </div>
 
-      <SidebarDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} />
+      {/* ABOUT MODAL */}
+      {
+        showAboutModal && (
+          <div className="modal-overlay">
+
+            <div className="about-modal">
+
+              <button
+                className="close-btn"
+                onClick={() =>
+                  setShowAboutModal(false)
+                }
+              >
+                ✕
+              </button>
+
+              <h2>
+                About Zakat
+              </h2>
+
+              <div className="about-grid">
+
+                <div className="about-box">
+                  <h3>
+                    What Is Zakat?
+                  </h3>
+
+                  <p>
+                    Zakat is an obligatory
+                    charity for Muslims
+                    who meet the nisab
+                    threshold. It purifies
+                    wealth and helps
+                    people in need.
+                  </p>
+                </div>
+
+                <div className="about-box">
+                  <h3>
+                    What Is Business Zakat?
+                  </h3>
+
+                  <p>
+                    Business zakat is
+                    zakat imposed on
+                    profits, savings,
+                    and business assets
+                    after reaching
+                    nisab and haul.
+                  </p>
+                </div>
+
+                <div className="about-box">
+                  <h3>
+                    Why We Pay Zakat?
+                  </h3>
+
+                  <p>
+                    Zakat is paid to
+                    fulfil Islamic
+                    obligations,
+                    purify wealth,
+                    and support
+                    asnaf groups.
+                  </p>
+                </div>
+
+                <div className="about-box">
+                  <h3>
+                    Benefits of Zakat
+                  </h3>
+
+                  <p>
+                    ✔ Purifies wealth
+                    <br />
+                    ✔ Helps the poor
+                    <br />
+                    ✔ Strengthens society
+                    <br />
+                    ✔ Gains blessings
+                  </p>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        )
+      }
+
+      {/* ASNAF */}
+      {
+        showAsnafModal && (
+          <div className="modal-overlay">
+
+            <div className="about-modal">
+
+              <button
+                className="close-btn"
+                onClick={() =>
+                  setShowAsnafModal(false)
+                }
+              >
+                ✕
+              </button>
+
+              <h2>
+                Asnaf Zakat
+              </h2>
+
+              <div className="asnaf-container">
+
+                {/* LEFT SIDE */}
+                <div className="asnaf-sidebar">
+
+                  <button
+                    className={`asnaf-tab ${selectedAsnaf === "Fakir"
+                      ? "active"
+                      : ""
+                      }`}
+                    onClick={() =>
+                      setSelectedAsnaf(
+                        "Fakir"
+                      )
+                    }
+                  >
+                    Fakir
+                  </button>
+
+                  <button
+                    className={`asnaf-tab ${selectedAsnaf === "Miskin"
+                      ? "active"
+                      : ""
+                      }`}
+                    onClick={() =>
+                      setSelectedAsnaf(
+                        "Miskin"
+                      )
+                    }
+                  >
+                    Miskin
+                  </button>
+
+                  <button
+                    className={`asnaf-tab ${selectedAsnaf === "Amil"
+                      ? "active"
+                      : ""
+                      }`}
+                    onClick={() =>
+                      setSelectedAsnaf(
+                        "Amil"
+                      )
+                    }
+                  >
+                    Amil
+                  </button>
+
+                  <button
+                    className={`asnaf-tab ${selectedAsnaf === "Muallaf"
+                      ? "active"
+                      : ""
+                      }`}
+                    onClick={() =>
+                      setSelectedAsnaf(
+                        "Muallaf"
+                      )
+                    }
+                  >
+                    Muallaf
+                  </button>
+
+                  <button
+                    className={`asnaf-tab ${selectedAsnaf === "Riqab"
+                      ? "active"
+                      : ""
+                      }`}
+                    onClick={() =>
+                      setSelectedAsnaf(
+                        "Riqab"
+                      )
+                    }
+                  >
+                    Riqab
+                  </button>
+
+                  <button
+                    className={`asnaf-tab ${selectedAsnaf ===
+                      "Gharimin"
+                      ? "active"
+                      : ""
+                      }`}
+                    onClick={() =>
+                      setSelectedAsnaf(
+                        "Gharimin"
+                      )
+                    }
+                  >
+                    Gharimin
+                  </button>
+
+                  <button
+                    className={`asnaf-tab ${selectedAsnaf ===
+                      "Fisabilillah"
+                      ? "active"
+                      : ""
+                      }`}
+                    onClick={() =>
+                      setSelectedAsnaf(
+                        "Fisabilillah"
+                      )
+                    }
+                  >
+                    Fisabilillah
+                  </button>
+
+                  <button
+                    className={`asnaf-tab ${selectedAsnaf ===
+                      "Ibn Sabil"
+                      ? "active"
+                      : ""
+                      }`}
+                    onClick={() =>
+                      setSelectedAsnaf(
+                        "Ibn Sabil"
+                      )
+                    }
+                  >
+                    Ibn Sabil
+                  </button>
+
+                </div>
+
+                {/* RIGHT SIDE */}
+                <div className="asnaf-content">
+
+                  <h2>
+                    {selectedAsnaf}
+                  </h2>
+
+                  <p>
+                    {selectedAsnaf ===
+                      "Fakir" &&
+                      "A poor Muslim who has no income or insufficient means to meet basic daily needs."}
+
+                    {selectedAsnaf ===
+                      "Miskin" &&
+                      "A Muslim with limited income that is insufficient to support essential living expenses."}
+
+                    {selectedAsnaf ===
+                      "Amil" &&
+                      "Individuals appointed to manage and distribute zakat funds."}
+
+                    {selectedAsnaf ===
+                      "Muallaf" &&
+                      "New Muslims or individuals whose hearts are inclined towards Islam."}
+
+                    {selectedAsnaf ===
+                      "Riqab" &&
+                      "People in bondage or slavery seeking freedom."}
+
+                    {selectedAsnaf ===
+                      "Gharimin" &&
+                      "Muslims burdened with debt for basic necessities."}
+
+                    {selectedAsnaf ===
+                      "Fisabilillah" &&
+                      "People striving in the cause of Allah for community benefit."}
+
+                    {selectedAsnaf ===
+                      "Ibn Sabil" &&
+                      "Travelers stranded and needing temporary financial assistance."}
+                  </p>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      }
+
+      <SidebarDrawer
+        isOpen={
+          isDrawerOpen
+        }
+        onClose={() =>
+          setIsDrawerOpen(
+            false
+          )
+        }
+      />
+
       <Chatbot />
     </>
   );

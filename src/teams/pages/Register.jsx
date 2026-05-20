@@ -60,7 +60,33 @@ function Register({ onRegisterSuccess, onBackToLogin }) {
     setIsLoading(true);
 
     try {
-      await createUserWithEmailAndPassword(auth, email.trim(), password);
+      const cleanEmail =
+  email.trim().toLowerCase();
+
+const cleanPassword =
+  password.trim();
+
+await createUserWithEmailAndPassword(
+  auth,
+  cleanEmail,
+  cleanPassword
+);
+
+// SAVE USER DATA
+localStorage.setItem(
+  "registeredFullName",
+  username
+);
+
+localStorage.setItem(
+  "registeredEmail",
+  cleanEmail
+);
+
+console.log(
+  "Registered user:",
+  cleanEmail
+);
       
       setIsLoading(false);
       setMessage("✅ Account created successfully! Redirecting to login...");
@@ -116,10 +142,12 @@ function Register({ onRegisterSuccess, onBackToLogin }) {
           <div className="floating-group">
             <input 
               id="user" 
+              name="fullName"
               type="text" 
               placeholder=" " 
               value={username} 
               onChange={(e) => setUsername(e.target.value)} 
+              autoComplete="name"
               disabled={isLoading}
               required 
             />
@@ -129,10 +157,12 @@ function Register({ onRegisterSuccess, onBackToLogin }) {
           <div className="floating-group">
             <input 
               id="email" 
+              name="email"
               type="email" 
               placeholder=" " 
               value={email} 
               onChange={(e) => setEmail(e.target.value)} 
+              autoComplete="email"
               disabled={isLoading}
               required 
             />

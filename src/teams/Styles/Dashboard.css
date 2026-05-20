@@ -543,3 +543,556 @@
     padding: 24px;
   }
 }
+
+/* ===================================
+   PREMIUM ABOUT ZAKAT MODAL
+=================================== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+
+  background:
+    rgba(
+      0,
+      0,
+      0,
+      0.45
+    );
+
+  backdrop-filter:
+    blur(10px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 999999;
+
+  padding: 20px;
+}
+
+.about-modal {
+  width: 720px;
+  max-width: 82%;
+  min-height: auto;
+  max-height: 78vh;
+  overflow-y: auto;
+
+  padding: 40px;
+
+  border-radius: 35px;
+
+  background: #f9f5ee;
+
+  box-shadow:
+    0 20px 60px
+    rgba(0,0,0,0.15);
+
+  animation:
+    modalFade 0.3s ease;
+}
+
+.about-modal h2 {
+  text-align: center;
+
+  font-size: 42px;
+  font-weight: 700;
+
+  margin-bottom: 22px;
+
+  font-family:
+    'Playfair Display',
+    serif;
+
+  background:
+    linear-gradient(
+      180deg,
+      #d4af37,
+      #8b6526
+    );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  gap: 14px;
+}
+
+.about-box {
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.75
+    );
+
+  backdrop-filter:
+    blur(10px);
+
+  border-radius: 22px;
+
+  padding: 18px;
+
+  border:
+    1px solid
+    rgba(
+      212,
+      175,
+      55,
+      0.1
+    );
+
+  box-shadow:
+    0 8px 20px
+    rgba(
+      0,
+      0,
+      0,
+      0.05
+    );
+
+  transition:
+    all 0.3s ease;
+}
+
+.about-box:hover {
+  transform:
+    translateY(-8px);
+
+  box-shadow:
+    0 22px 45px
+    rgba(
+      139,
+      101,
+      38,
+      0.14
+    );
+
+  border:
+    1px solid
+    rgba(
+      212,
+      175,
+      55,
+      0.28
+    );
+}
+
+.about-box h3 {
+  font-size: 21px;
+  color: #8b6526;
+  margin-bottom: 14px;
+  font-weight: 700;
+}
+
+.about-box p {
+  color: #5f4b2f;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.close-btn {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+
+  width: 52px;
+  height: 52px;
+
+  border-radius: 50%;
+  border: none;
+
+  background:
+    rgba(
+      212,
+      175,
+      55,
+      0.12
+    );
+
+  color: #8b6526;
+  font-size: 26px;
+  cursor: pointer;
+
+  transition:
+    all 0.3s ease;
+}
+
+.close-btn:hover {
+  transform: rotate(90deg);
+
+  background:
+    linear-gradient(
+      135deg,
+      #d4af37,
+      #8b6526
+    );
+
+  color: white;
+}
+
+@keyframes modalFade {
+  from {
+    opacity: 0;
+    transform:
+      translateY(20px)
+      scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+/* ==========================
+   PREMIUM ASNAF SECTION
+========================== */
+
+.asnaf-container {
+  background: transparent;
+
+  border-radius: 0;
+  padding: 0;
+
+  display: flex;
+  gap: 18px;
+
+  margin-top: 12px;
+
+  box-shadow: none;
+  border: none;
+}
+
+/* LEFT MENU */
+.asnaf-sidebar {
+  width: 210px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.asnaf-tab {
+  border: none;
+  background: #f3e5c4;
+
+  padding: 18px;
+  border-radius: 18px;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  color: #8b6526;
+  cursor: pointer;
+
+  transition: 0.3s ease;
+}
+
+.asnaf-tab:hover {
+  transform: translateX(5px);
+}
+
+.asnaf-tab.active {
+  background:
+    linear-gradient(
+      135deg,
+      #c89b3c,
+      #8b6526
+    );
+
+  color: white;
+
+  box-shadow:
+    0 10px 24px
+    rgba(139,101,38,0.25);
+}
+
+/* RIGHT CONTENT */
+.asnaf-content {
+  flex: 1;
+
+  background:
+    rgba(255,255,255,0.78);
+
+  border-radius: 24px;
+
+  padding: 24px;
+
+  min-height: 260px;
+
+  border:
+    1px solid
+    rgba(212,160,23,0.10);
+
+  box-shadow:
+    0 8px 20px
+    rgba(0,0,0,0.05);
+}
+
+.asnaf-content h2 {
+  font-family:
+    'Playfair Display',
+    serif;
+
+  font-size: 30px;
+
+  margin-bottom: 20px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #d4af37,
+      #8b6526
+    );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.asnaf-content p {
+  font-size: 17px;
+  line-height: 1.8;
+  color: #5c4d38;
+}
+
+/* ===================================
+   NEW PREMIUM NAVBAR
+=================================== */
+
+.premium-navbar {
+  position: sticky;
+  top: 16px;
+  z-index: 999;
+
+  margin: 0 0 20px;
+  border-radius: 24px;
+
+  background:
+    rgba(255,252,246,0.96);
+
+  backdrop-filter: blur(20px);
+
+  border:
+    1px solid #eadfca;
+
+  box-shadow:
+    0 8px 26px
+    rgba(0,0,0,0.06);
+
+  overflow: hidden;
+}
+
+/* Islamic pattern accent */
+.premium-navbar::before {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  width: 260px;
+  height: 100%;
+
+  opacity: 0.08;
+
+  background-image:
+    radial-gradient(
+      #d4a017 1px,
+      transparent 1px
+    );
+
+  background-size:
+    18px 18px;
+
+  pointer-events: none;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 14px 26px;
+}
+
+/* LEFT */
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-logo-button {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.navbar-logo {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
+.navbar-brand-name {
+  display: block;
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: #8b6526;
+}
+
+.navbar-subtitle {
+  font-size: 13px;
+  color: #b48a2b;
+  margin-top: 2px;
+}
+
+/* MENU */
+.premium-nav-menu {
+  display: flex;
+  align-items: center;
+
+  gap: 36px;
+  margin-left: 70px;
+}
+
+.premium-nav-menu button {
+  background: transparent;
+  border: none;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  color: #5f4b2f;
+  cursor: pointer;
+
+  transition: 0.3s ease;
+}
+
+.premium-nav-menu button:hover {
+  color: #d4a017;
+  transform: translateY(-2px);
+}
+
+/* RIGHT MENU */
+.navbar-menu-right {
+  position: relative;
+}
+
+.sidebar-toggle {
+  width: 52px;
+  height: 52px;
+
+  border: none;
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #fff8ea,
+      #f3e5c4
+    );
+
+  border:
+    1px solid
+    rgba(
+      212,
+      175,
+      55,
+      0.18
+    );
+
+  color: #8b6526;
+
+  font-size: 24px;
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 18px
+    rgba(
+      139,
+      101,
+      38,
+      0.12
+    );
+
+  transition: 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+  transform: scale(1.05);
+}
+
+.logo-dropdown {
+  position: absolute;
+  top: 80px;
+  right: 0;
+
+  width: 240px;
+
+  background: white;
+  border-radius: 22px;
+
+  box-shadow:
+    0 18px 40px
+    rgba(0,0,0,0.14);
+
+  padding: 12px;
+}
+
+.logo-dropdown button {
+  width: 100%;
+  text-align: left;
+
+  border: none;
+  background: transparent;
+
+  padding: 14px 16px;
+  border-radius: 14px;
+
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: 0.3s ease;
+}
+
+.logo-dropdown button:hover {
+  background: #f8f3ea;
+}
+
+/* MOBILE */
+@media (max-width: 900px) {
+
+  .navbar-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .premium-nav-menu {
+    margin-left: 0;
+    gap: 22px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .navbar-brand-name {
+    font-size: 1.5rem;
+  }
+
+  .sidebar-toggle {
+    width: 54px;
+    height: 54px;
+  }
+}
