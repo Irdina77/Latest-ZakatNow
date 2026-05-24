@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { CalendarDays, DollarSign, Target, TrendingUp } from 'lucide-react';
 import SidebarDrawer from '../components/SidebarDrawer';
 import '../Styles/NisabPage.css';
 import zakatIcon from '../../teams/assets/zakat-icon.webp';
@@ -72,22 +73,20 @@ export default function NisabPage() {
         {/* Header with Logo Branding - Matches Calculator Page */}
         <header className="nisab-topbar">
           <div className="nisab-brand">
-            <img
-              src={zakatIcon}
-              alt="logo"
-              className="nisab-brand-logo-img"
-            />
-            <div className="nisab-brand-text">
-              <h1 className="nisab-brand-title">ZakatNow</h1>
-              <div className="nisab-divider">
-                <span></span>
-                <span className="diamond">◆</span>
-                <span></span>
+            <button
+              className="navbar-logo-button"
+              onClick={() => navigate('/dashboard')}
+            >
+              <img
+                src={zakatIcon}
+                alt="logo"
+                className="navbar-logo"
+              />
+              <div>
+                <span className="navbar-brand-name">ZakatNow</span>
+                <p className="navbar-subtitle">Smart AI-Powered Zakat</p>
               </div>
-              <p className="nisab-brand-subtitle">
-                Calculate your business zakat easily and accurately
-              </p>
-            </div>
+            </button>
           </div>
 
           <div className="nisab-topbar-actions">
@@ -96,8 +95,8 @@ export default function NisabPage() {
               onClick={() => setIsDrawerOpen(true)}
               aria-label="Open menu"
             >
-              <span className="hamburger-line"></span>
-              <span className="hamburger-line"></span>
+              <span className="hamburger-line top"></span>
+              <span className="hamburger-line bottom"></span>
             </button>
           </div>
         </header>
@@ -105,7 +104,9 @@ export default function NisabPage() {
         <main className="nisab-main">
           {/* Page Header Card */}
           <section className="nisab-header-card">
-            <div className="nisab-header-icon">📅</div>
+            <div className="nisab-header-icon">
+              <CalendarDays size={32} />
+            </div>
             <div className="nisab-header-content">
               <h2 className="nisab-page-title">Nisab Tahunan Zakat</h2>
               <p className="nisab-page-subtitle">
@@ -134,7 +135,7 @@ export default function NisabPage() {
           <section className="nisab-summary-grid">
             {/* Card 1: Current Gold Price */}
             <div className="nisab-summary-card">
-              <div className="nisab-summary-icon">💰</div>
+              <div className="nisab-summary-icon"><DollarSign size={28} /></div>
               <div className="nisab-summary-content">
                 <h4 className="nisab-summary-label">Current Gold Price</h4>
                 <div className="nisab-summary-value">
@@ -146,7 +147,7 @@ export default function NisabPage() {
 
             {/* Card 2: Nisab (85 grams) */}
             <div className="nisab-summary-card highlight">
-              <div className="nisab-summary-icon">🎯</div>
+              <div className="nisab-summary-icon"><Target size={28} /></div>
               <div className="nisab-summary-content">
                 <h4 className="nisab-summary-label">Nisab (85 grams)</h4>
                 <div className="nisab-summary-value">
@@ -158,7 +159,7 @@ export default function NisabPage() {
 
             {/* Card 3: Zakat Rate */}
             <div className="nisab-summary-card">
-              <div className="nisab-summary-icon">📊</div>
+              <div className="nisab-summary-icon"><TrendingUp size={28} /></div>
               <div className="nisab-summary-content">
                 <h4 className="nisab-summary-label">Zakat Rate</h4>
                 <div className="nisab-summary-value">{zakatRate}%</div>
@@ -168,7 +169,7 @@ export default function NisabPage() {
 
             {/* Card 4: Year */}
             <div className="nisab-summary-card">
-              <div className="nisab-summary-icon">📆</div>
+              <div className="nisab-summary-icon"><CalendarDays size={28} /></div>
               <div className="nisab-summary-content">
                 <h4 className="nisab-summary-label">Year</h4>
                 <div className="nisab-summary-value">{year}</div>
@@ -201,17 +202,17 @@ export default function NisabPage() {
 
           {/* Action Buttons */}
           <section className="nisab-actions">
-            <button 
-              className="nisab-btn-secondary" 
+            <button
+              className="btn premium-back-btn"
               onClick={() => navigate('/dashboard')}
             >
-              Back to Dashboard
+              ← Back to Dashboard
             </button>
-            <button 
-              className="nisab-btn-primary" 
+            <button
+              className="btn premium-pay-btn"
               onClick={() => navigate('/calculator')}
             >
-              Go to Calculator
+              Go to Calculator →
             </button>
           </section>
         </main>

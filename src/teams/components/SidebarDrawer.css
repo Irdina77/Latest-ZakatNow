@@ -25,6 +25,15 @@
   overflow-y: auto;
 }
 
+/* Right side variant */
+.sidebar-drawer.right {
+  left: auto;
+  right: 0;
+  border-left: 1px solid #e8dcc6;
+  border-right: none;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+}
+
 /* Profile Section */
 .sidebar-profile {
   padding: 32px 24px 24px;
@@ -151,6 +160,11 @@
   .sidebar-drawer {
     width: 280px;
   }
+  .sidebar-drawer.right {
+    width: 280px;
+    right: 0;
+    left: auto;
+  }
 
   .sidebar-profile {
     padding: 24px 20px 20px;
@@ -165,6 +179,11 @@
 @media (max-width: 480px) {
   .sidebar-drawer {
     width: 260px;
+  }
+  .sidebar-drawer.right {
+    width: 260px;
+    right: 0;
+    left: auto;
   }
 }
 

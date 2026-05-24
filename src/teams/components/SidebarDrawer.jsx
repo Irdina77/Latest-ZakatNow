@@ -5,7 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { getTranslationSection } from '../translations/translations';
 import './SidebarDrawer.css';
 
-const SidebarDrawer = ({ isOpen, onClose }) => {
+const SidebarDrawer = ({ isOpen, onClose, side = 'left' }) => {
   const navigate = useNavigate();
   const { language, updateLanguage } = useLanguage();
   const t = getTranslationSection(language, 'sidebar');
@@ -67,33 +67,13 @@ const SidebarDrawer = ({ isOpen, onClose }) => {
   }, [language]);
 
 const menuItems = [
-  {
-    id: "business-setup",
-    label: t.businessSetup || "Business Setup",
-    icon: "🏢",
-    path: "/business-setup",
-  },
-
-  {
-    id: "profile",
-    label: t.profile,
-    icon: "👤",
-    action: "profile",
-  },
-
-  {
-    id: "settings",
-    label: t.settings,
-    icon: "⚙️",
-    action: "settings",
-  },
-
-  {
-    id: "logout",
-    label: t.logOut,
-    icon: "🚪",
-    action: "logout",
-  },
+  { id: 'home', label: t.homePage || 'Home Page', icon: '🏠', path: '/dashboard' },
+  { id: 'calculator', label: t.calculateZakat || 'Calculate Zakat', icon: '🧮', path: '/calculator' },
+  { id: 'business-setup', label: t.businessSetup || 'Business Setup', icon: '🏢', path: '/business-setup' },
+  { id: 'nisab-rate', label: t.nisabRate || 'Nisab Rate', icon: '📊', action: 'nisab' },
+  { id: 'profile', label: t.profile || 'Profile', icon: '👤', path: '/profile' },
+  { id: 'pay-zakat', label: t.payZakat || 'Pay Zakat', icon: '💳', path: '/pay-zakat' },
+  { id: 'logout', label: t.logOut || 'Log Out', icon: '🚪', action: 'logout' },
 ];
 
   const handleMenuClick = (item) => {
@@ -128,7 +108,24 @@ const menuItems = [
     onClose();
   };
 
-  const drawerVariants = {
+  const drawerVariants = side === 'right' ? {
+    closed: {
+      x: '100%',
+      transition: {
+        type: 'tween',
+        duration: 0.3,
+        ease: 'easeInOut'
+      }
+    },
+    open: {
+      x: 0,
+      transition: {
+        type: 'tween',
+        duration: 0.3,
+        ease: 'easeInOut'
+      }
+    }
+  } : {
     closed: {
       x: '-100%',
       transition: {
@@ -188,7 +185,7 @@ const menuItems = [
 
           {/* Drawer */}
           <motion.div
-            className="sidebar-drawer"
+            className={`sidebar-drawer ${side === 'right' ? 'right' : ''}`}
             variants={drawerVariants}
             initial="closed"
             animate="open"
