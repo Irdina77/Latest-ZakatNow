@@ -10,6 +10,29 @@ export default function BusinessSetup() {
   const { language } = useLanguage();
   const t = getTranslationSection(language, "businessSetup");
 
+  const states = [
+    "Johor",
+    "Kedah",
+    "Kelantan",
+    "Melaka",
+    "Negeri Sembilan",
+    "Pahang",
+    "Penang",
+    "Perak",
+    "Selangor",
+    "Terengganu",
+    "Sabah",
+    "Sarawak",
+  ];
+
+  const getPersistedState = () => {
+    const savedState =
+      localStorage.getItem("selectedState") ||
+      localStorage.getItem("selectedZakatState");
+
+    return states.includes(savedState) ? savedState : "Selangor";
+  };
+
   const [formData, setFormData] = useState(() => ({
     businessName: "",
     businessType: localStorage.getItem("businessType") || "retail",
@@ -19,10 +42,7 @@ export default function BusinessSetup() {
     phone: "",
     address: "",
     city: "",
-    state:
-      localStorage.getItem("selectedState") ||
-      localStorage.getItem("selectedZakatState") ||
-      "Kelantan",
+    state: getPersistedState(),
     postalCode: "",
     annualRevenue: "",
     businessStartDate: "",
@@ -40,21 +60,6 @@ export default function BusinessSetup() {
     { value: "manufacturing", label: "Manufacturing" },
     { value: "trading", label: "Trading" },
     { value: "other", label: "Other" },
-  ];
-
-  const states = [
-    "Johor",
-    "Kedah",
-    "Kelantan",
-    "Melaka",
-    "Negeri Sembilan",
-    "Pahang",
-    "Penang",
-    "Perak",
-    "Selangor",
-    "Terengganu",
-    "Sabah",
-    "Sarawak",
   ];
 
   const zakatMethods = [
@@ -108,6 +113,9 @@ export default function BusinessSetup() {
     }
     if (!formData.city.trim()) {
       newErrors.city = t.cityRequired || "City is required";
+    }
+    if (!formData.state || !states.includes(formData.state)) {
+      newErrors.state = t.stateRequired || "Please select a valid state";
     }
     if (!formData.postalCode.trim()) {
       newErrors.postalCode = t.postalCodeRequired || "Postal code is required";
@@ -387,6 +395,9 @@ export default function BusinessSetup() {
                       </option>
                     ))}
                   </select>
+                  {errors.state && (
+                    <span className="error-message">{errors.state}</span>
+                  )}
                 </div>
 
                 <div className="form-group">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
@@ -23,6 +23,8 @@ const malaysiaStates = [
   "Terengganu",
 ];
 
+const defaultState = "Selangor";
+
 function Register({ onRegisterSuccess, onBackToLogin }) {
   const navigate = useNavigate();
   const { language } = useLanguage();
@@ -30,25 +32,17 @@ function Register({ onRegisterSuccess, onBackToLogin }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [selectedState, setSelectedState] = useState("Selangor");
+  const [selectedState, setSelectedState] = useState(() => {
+    const savedState =
+      localStorage.getItem("selectedState") ||
+      localStorage.getItem("selectedZakatState");
+    return malaysiaStates.includes(savedState) ? savedState : defaultState;
+  });
   const [businessType, setBusinessType] = useState(
     localStorage.getItem("businessType") || "retail"
   );
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    const savedState =
-      localStorage.getItem("selectedState") ||
-      localStorage.getItem("selectedZakatState");
-
-    if (savedState) {
-      setSelectedState(savedState);
-    }
-
-    const savedBusinessType = localStorage.getItem("businessType");
-    if (savedBusinessType) setBusinessType(savedBusinessType);
-  }, []);
 
   const validateForm = () => {
     // Check if all fields are filled
@@ -79,7 +73,24 @@ function Register({ onRegisterSuccess, onBackToLogin }) {
       return false;
     }
 
+    if (!selectedState || !malaysiaStates.includes(selectedState)) {
+      setMessage("⚠️ Please select a valid state.");
+      return false;
+    }
+
     return true;
+  };
+
+  const handleStateChange = (newState) => {
+    if (malaysiaStates.includes(newState)) {
+      setSelectedState(newState);
+      localStorage.setItem("selectedState", newState);
+    }
+  };
+
+  const handleBusinessTypeChange = (type) => {
+    setBusinessType(type);
+    localStorage.setItem("businessType", type);
   };
 
   const handleCreateAccount = async (e) => {
@@ -231,7 +242,7 @@ console.log(
               id="state"
               name="state"
               value={selectedState}
-              onChange={(e) => setSelectedState(e.target.value)}
+              onChange={(e) => handleStateChange(e.target.value)}
               disabled={isLoading}
               required
             >
@@ -249,7 +260,7 @@ console.log(
               id="businessType"
               name="businessType"
               value={businessType}
-              onChange={(e) => setBusinessType(e.target.value)}
+              onChange={(e) => handleBusinessTypeChange(e.target.value)}
               disabled={isLoading}
               required
             >

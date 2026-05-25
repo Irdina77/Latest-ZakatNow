@@ -15,7 +15,7 @@ body {
   align-items: center;
   position: relative;
   overflow: hidden;
-  background: #1a1a1a;
+  background: linear-gradient(180deg, #fff8e5 0%, #f4ddae 100%);
 }
 
 .glass-page-container::before {
@@ -34,15 +34,15 @@ body {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 400px;
+  max-width: 440px;
   padding: 45px;
   border-radius: 28px;
 
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(180deg, #fff4d8, #f5dbbb);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(212, 175, 55, 0.24);
 
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 25px 50px rgba(139, 101, 38, 0.12);
   text-align: center;
 }
 
@@ -110,10 +110,10 @@ body {
 /* ===== SUBTITLE ===== */
 .subtitle {
   text-align: center;
-  color: #f7e8bf;
+  color: #3b2a0a;
   font-size: 14px;
   margin-bottom: 30px;
-  opacity: 0.9;
+  opacity: 0.95;
 }
 
 /* ===== INPUT ===== */
@@ -126,15 +126,19 @@ body {
   width: 100%;
   padding: 24px 16px 10px 16px;
 
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(180deg, #fff7e4, #f7e2c1);
+  border: 1px solid rgba(212, 175, 55, 0.24);
   border-radius: 12px;
 
-  color: #ffffff;
+  color: #3b2a0a;
   font-size: 16px;
   outline: none;
 
   transition: all 0.3s ease;
+}
+
+.floating-group input::placeholder {
+  color: rgba(58, 34, 5, 0.6);
 }
 
 .floating-group label {
@@ -143,7 +147,7 @@ body {
   top: 50%;
   transform: translateY(-50%);
 
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(58, 34, 5, 0.85);
   pointer-events: none;
 
   transition: all 0.3s ease;
@@ -159,9 +163,9 @@ body {
 }
 
 .floating-group input:focus {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: #f7e8bf;
-  box-shadow: 0 0 15px rgba(247, 232, 191, 0.2);
+  background: linear-gradient(180deg, #fff9ea, #f9e6ca);
+  border-color: #d4a017;
+  box-shadow: 0 0 15px rgba(212, 160, 23, 0.16);
 }
 
 /* ===== BUTTON ===== */
@@ -170,16 +174,21 @@ body {
   padding: 16px;
   margin-top: 10px;
 
-  background: linear-gradient(135deg, #c89b3c, #8b6526);
+  background: linear-gradient(135deg, #d4a017, #b8860b);
   border: none;
-  border-radius: 12px;
+  border-radius: 14px;
 
-  color: white;
-  font-weight: 600;
+  color: #1f1200;
+  font-weight: 700;
   font-size: 16px;
 
   cursor: pointer;
-  transition: 0.3s;
+  transition: all 0.3s ease;
+}
+
+.btn-glass-gold:hover {
+  background: linear-gradient(135deg, #b8860b, #8c5d09);
+  box-shadow: 0 10px 20px rgba(139, 101, 38, 0.18);
 }
 
 .btn-glass-gold:hover {
@@ -191,12 +200,12 @@ body {
 .auth-link {
   text-align: center;
   margin-top: 25px;
-  color: white;
+  color: #3b2a0a;
   font-size: 14px;
 }
 
 .auth-link span {
-  color: #f7e8bf;
+  color: #8b6526;
   font-weight: 700;
   cursor: pointer;
   text-decoration: underline;
