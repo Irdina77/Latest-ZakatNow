@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
-import { useLanguage } from "../context/LanguageContext";
 import { Calculator, HandCoins, ReceiptText } from "lucide-react";
 import { getUserState, setUserState } from "../utils/userStateStorage";
 
@@ -29,7 +28,6 @@ const nisabStates2026 = [
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const { language } = useLanguage();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [showLogoMenu, setShowLogoMenu] = useState(false);
