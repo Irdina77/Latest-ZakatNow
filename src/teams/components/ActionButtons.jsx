@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
 import { getTranslationSection } from "../translations/translations";
+import { Save, RefreshCw, CreditCard } from 'lucide-react';
 
 export default function ActionButtons({ onSave, onReset, onProceed }) {
   const { language } = useLanguage();
@@ -29,7 +30,7 @@ export default function ActionButtons({ onSave, onReset, onProceed }) {
         onClick={() => handleButtonClick("save", onSave)}
         disabled={Object.values(loadingStates).some((state) => state)}
       >
-        <span className="btn-icon">💾</span>
+        <Save size={18} strokeWidth={2} />
         <span className="btn-text">{t.saveResult}</span>
         {loadingStates.save && <span className="btn-spinner"></span>}
       </button>
@@ -39,7 +40,7 @@ export default function ActionButtons({ onSave, onReset, onProceed }) {
         onClick={() => handleButtonClick("reset", onReset)}
         disabled={Object.values(loadingStates).some((state) => state)}
       >
-        <span className="btn-icon">🔄</span>
+        <RefreshCw size={18} strokeWidth={2} />
         <span className="btn-text">{t.reset}</span>
         {loadingStates.reset && <span className="btn-spinner"></span>}
       </button>
@@ -51,7 +52,7 @@ export default function ActionButtons({ onSave, onReset, onProceed }) {
         onClick={() => handleButtonClick("proceed", onProceed)}
         disabled={Object.values(loadingStates).some((state) => state)}
       >
-        <span className="btn-icon">💳</span>
+        <CreditCard size={18} strokeWidth={2} />
         <span className="btn-text">{t.proceedToPayment}</span>
         {loadingStates.proceed && <span className="btn-spinner"></span>}
       </button>

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { getTranslationSection } from '../translations/translations';
+import { UserRound, Circle, X, House, Calculator, Building2, BadgeDollarSign, HandCoins, BookOpen, Bookmark, LogOut } from 'lucide-react';
 import './SidebarDrawer.css';
 
 const SidebarDrawer = ({ isOpen, onClose, side = 'left' }) => {
@@ -18,6 +19,8 @@ const SidebarDrawer = ({ isOpen, onClose, side = 'left' }) => {
   const [showProfile, setShowProfile] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showNisab, setShowNisab] = useState(false);
+  const [showAboutModal, setShowAboutModal] = useState(false);
+  const [showGuideModal, setShowGuideModal] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   // Settings states
@@ -66,14 +69,16 @@ const SidebarDrawer = ({ isOpen, onClose, side = 'left' }) => {
   }, [language]);
 
   const menuItems = [
-  { id: 'home', label: t.homePage || 'Home Page', path: '/dashboard' },
-  { id: 'calculator', label: t.calculateZakat || 'Calculate Zakat', path: '/calculator' },
-  { id: 'business-setup', label: t.businessSetup || 'Business Setup', path: '/business-setup' },
-  { id: 'nisab-rate', label: t.nisabRate || 'Nisab Rate', action: 'nisab' },
-  { id: 'profile', label: t.profile || 'Profile', path: '/profile' },
-  { id: 'pay-zakat', label: t.payZakat || 'Pay Zakat', path: '/pay-zakat' },
-  { id: 'logout', label: t.logOut || 'Log Out', action: 'logout' },
-];
+    { id: 'home', label: t.homePage || 'Home Page', path: '/dashboard', icon: House },
+    { id: 'calculator', label: t.calculateZakat || 'Calculate Zakat', path: '/calculator', icon: Calculator },
+    { id: 'business-setup', label: t.businessSetup || 'Business Setup', path: '/business-setup', icon: Building2 },
+    { id: 'nisab-rate', label: t.nisabRate || 'Nisab Rate', action: 'nisab', icon: BadgeDollarSign },
+    { id: 'profile', label: t.profile || 'Profile', path: '/profile', icon: UserRound },
+    { id: 'pay-zakat', label: t.payZakat || 'Pay Zakat', path: '/pay-zakat', icon: HandCoins },
+    { id: 'about-zakat', label: t.aboutZakat || 'About Zakat', action: 'about', icon: BookOpen, dividerBefore: true },
+    { id: 'zakat-guide', label: t.zakatGuide || 'Zakat Guide', action: 'guide', icon: Bookmark },
+    { id: 'logout', label: t.logOut || 'Log Out', action: 'logout', icon: LogOut, dividerBefore: true },
+  ];
 
   const handleMenuClick = (item) => {
     if (item.action === 'profile') {
@@ -82,6 +87,12 @@ const SidebarDrawer = ({ isOpen, onClose, side = 'left' }) => {
       setShowSettings(true);
     } else if (item.action === 'nisab') {
       setShowNisab(true);
+    } else if (item.action === 'about') {
+      onClose();
+      setShowAboutModal(true);
+    } else if (item.action === 'guide') {
+      onClose();
+      setShowGuideModal(true);
     } else if (item.action === 'logout') {
       setShowLogoutConfirm(true);
     } else if (item.path) {
@@ -192,7 +203,7 @@ const SidebarDrawer = ({ isOpen, onClose, side = 'left' }) => {
             {/* User Profile Section */}
             <div className="sidebar-profile">
               <div className="sidebar-avatar">
-                <span>👤</span>
+                <UserRound size={36} strokeWidth={2} />
               </div>
               <div className="sidebar-user-info">
                 <h3 className="sidebar-welcome">{t.welcomeBack}</h3>
@@ -206,25 +217,28 @@ const SidebarDrawer = ({ isOpen, onClose, side = 'left' }) => {
             {/* Menu Items */}
             <nav className="sidebar-nav">
               {menuItems.map((item, index) => (
-                <motion.div
-                  key={item.id}
-                  variants={itemVariants}
-                  initial="closed"
-                  animate="open"
-                  transition={{ delay: index * 0.1 }}
-                  className="sidebar-menu-item"
-                  onClick={() => handleMenuClick(item)}
-                >
-                  <span className="sidebar-menu-label">{item.label}</span>
-                </motion.div>
+                <React.Fragment key={item.id}>
+                  {item.dividerBefore && <div className="sidebar-menu-section-divider" />}
+                  <motion.div
+                    variants={itemVariants}
+                    initial="closed"
+                    animate="open"
+                    transition={{ delay: index * 0.1 }}
+                    className="sidebar-menu-item"
+                    onClick={() => handleMenuClick(item)}
+                  >
+                    <item.icon size={18} strokeWidth={2} className="sidebar-menu-icon" />
+                    <span className="sidebar-menu-label">{item.label}</span>
+                  </motion.div>
+                </React.Fragment>
               ))}
             </nav>
 
             {/* Islamic Pattern Accent */}
             <div className="sidebar-pattern">
-              <div className="pattern-element">✦</div>
-              <div className="pattern-element">✦</div>
-              <div className="pattern-element">✦</div>
+              <div className="pattern-element"><Circle size={8} strokeWidth={1.5} /></div>
+              <div className="pattern-element"><Circle size={8} strokeWidth={1.5} /></div>
+              <div className="pattern-element"><Circle size={8} strokeWidth={1.5} /></div>
             </div>
           </motion.div>
         </>
@@ -251,7 +265,7 @@ const SidebarDrawer = ({ isOpen, onClose, side = 'left' }) => {
             >
               <div className="modal-header">
                 <h2>{tProfile.title}</h2>
-                <button className="modal-close" onClick={() => setShowProfile(false)}>×</button>
+                <button className="modal-close" onClick={() => setShowProfile(false)}><X size={18} strokeWidth={2} /></button>
               </div>
               <div className="modal-body">
                 <div className="profile-info">
@@ -295,7 +309,7 @@ const SidebarDrawer = ({ isOpen, onClose, side = 'left' }) => {
             >
               <div className="modal-header">
                 <h2>{tSettings.title}</h2>
-                <button className="modal-close" onClick={() => setShowSettings(false)}>×</button>
+                <button className="modal-close" onClick={() => setShowSettings(false)}><X size={18} strokeWidth={2} /></button>
               </div>
               <div className="modal-body">
                 <div className="settings-group">
@@ -354,7 +368,7 @@ const SidebarDrawer = ({ isOpen, onClose, side = 'left' }) => {
             >
               <div className="modal-header">
                 <h2>{tNisab.title}</h2>
-                <button className="modal-close" onClick={() => setShowNisab(false)}>×</button>
+                <button className="modal-close" onClick={() => setShowNisab(false)}><X size={18} strokeWidth={2} /></button>
               </div>
               <div className="modal-body">
                 <div className="nisab-info">
@@ -373,6 +387,86 @@ const SidebarDrawer = ({ isOpen, onClose, side = 'left' }) => {
                   <div className="nisab-item">
                     <label>{tNisab.state}</label>
                     <span>{nisabData.state}</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* About Zakat Modal */}
+      <AnimatePresence>
+        {showAboutModal && (
+          <motion.div
+            className="modal-overlay"
+            variants={overlayVariants}
+            initial="closed"
+            animate="open"
+            exit="closed"
+            onClick={() => setShowAboutModal(false)}
+          >
+            <motion.div
+              className="modal-content nisab-modal"
+              variants={modalVariants}
+              initial="closed"
+              animate="open"
+              exit="closed"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="modal-header">
+                <h2>About Zakat</h2>
+                <button className="modal-close" onClick={() => setShowAboutModal(false)}><X size={18} strokeWidth={2} /></button>
+              </div>
+              <div className="modal-body">
+                <div className="nisab-info">
+                  <div className="nisab-item">
+                    <label>What is Zakat?</label>
+                    <span>Zakat is a compulsory charitable contribution for eligible Muslims who meet the nisab threshold.</span>
+                  </div>
+                  <div className="nisab-item">
+                    <label>What is Business Zakat?</label>
+                    <span>Business zakat is imposed on business assets and profits after reaching nisab and completing one haul.</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Zakat Guide Modal */}
+      <AnimatePresence>
+        {showGuideModal && (
+          <motion.div
+            className="modal-overlay"
+            variants={overlayVariants}
+            initial="closed"
+            animate="open"
+            exit="closed"
+            onClick={() => setShowGuideModal(false)}
+          >
+            <motion.div
+              className="modal-content nisab-modal"
+              variants={modalVariants}
+              initial="closed"
+              animate="open"
+              exit="closed"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="modal-header">
+                <h2>Zakat Guide</h2>
+                <button className="modal-close" onClick={() => setShowGuideModal(false)}><X size={18} strokeWidth={2} /></button>
+              </div>
+              <div className="modal-body">
+                <div className="nisab-info">
+                  <div className="nisab-item">
+                    <label>Who Must Pay Business Zakat?</label>
+                    <span>Muslim business owners whose wealth reaches nisab and completes a lunar year.</span>
+                  </div>
+                  <div className="nisab-item">
+                    <label>Business Zakat Rate</label>
+                    <span>2.5% of eligible business wealth.</span>
                   </div>
                 </div>
               </div>
@@ -402,7 +496,7 @@ const SidebarDrawer = ({ isOpen, onClose, side = 'left' }) => {
             >
               <div className="modal-header">
                 <h2>{tLogout.title}</h2>
-                <button className="modal-close" onClick={() => setShowLogoutConfirm(false)}>×</button>
+                <button className="modal-close" onClick={() => setShowLogoutConfirm(false)}><X size={18} strokeWidth={2} /></button>
               </div>
               <div className="modal-body">
                 <p>{tLogout.message}</p>

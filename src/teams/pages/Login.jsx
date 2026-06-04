@@ -24,9 +24,7 @@ function Login({ onLoginSuccess }) {
     e.preventDefault();
 
     if (!email || !password) {
-      setMessage(
-        `⚠️ ${t.allFieldsRequired}`
-      );
+      setMessage(t.allFieldsRequired);
       return;
     }
 
@@ -64,9 +62,7 @@ function Login({ onLoginSuccess }) {
 
         const role = "admin";
 
-        setMessage(
-          `✅ ${t.loginSuccessful}`
-        );
+        setMessage(t.loginSuccessful);
 
         onLoginSuccess(role);
 
@@ -103,9 +99,7 @@ function Login({ onLoginSuccess }) {
           ? "admin"
           : "user";
 
-      setMessage(
-        `✅ ${t.loginSuccessful}`
-      );
+      setMessage(t.loginSuccessful);
 
       onLoginSuccess(role);
 
@@ -188,9 +182,7 @@ function Login({ onLoginSuccess }) {
         {message && (
           <p
             className={`message ${
-              message.includes("✅")
-                ? "success"
-                : "error"
+              (message === t.loginSuccessful || /success|successful/i.test(message)) ? "success" : "error"
             }`}
           >
             {message}

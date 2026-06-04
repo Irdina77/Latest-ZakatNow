@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
 import { getTranslationSection } from "../translations/translations";
 import { getUserState, setUserState } from "../utils/userStateStorage";
+import { BriefcaseBusiness, Building2, UserRound, MapPin, ArrowLeft, BadgeDollarSign, Calculator } from "lucide-react";
 import "../Styles/BusinessSetup.css";
-import zakatIcon from "../assets/zakat-icon.webp";
 
 export default function BusinessSetup() {
   const navigate = useNavigate();
@@ -219,10 +219,11 @@ export default function BusinessSetup() {
             className="setup-back-btn"
             onClick={() => navigate("/dashboard")}
           >
-            ← Back
+            <ArrowLeft size={18} strokeWidth={2} />
+            Back
           </button>
           <h1 className="setup-title">
-            <img src={zakatIcon} alt="logo" className="setup-logo" />
+            <BriefcaseBusiness size={24} strokeWidth={2} className="setup-title-icon" />
             Business Setup
           </h1>
           <div style={{ width: "80px" }}></div>
@@ -235,7 +236,10 @@ export default function BusinessSetup() {
           {/* FORM */}
           <form onSubmit={handleSubmit} className="setup-form">
             <div className="form-section">
-              <h2 className="form-section-title">📋 Business Information</h2>
+              <h2 className="form-section-title">
+                <Building2 size={24} strokeWidth={2} className="form-section-title-icon" />
+                Business Information
+              </h2>
 
               <div className="form-group">
                 <label htmlFor="businessName">Business Name *</label>
@@ -286,7 +290,10 @@ export default function BusinessSetup() {
 
             {/* OWNER INFORMATION */}
             <div className="form-section">
-              <h2 className="form-section-title">👤 Owner Information</h2>
+              <h2 className="form-section-title">
+                <UserRound size={24} strokeWidth={2} className="form-section-title-icon" />
+                Owner Information
+              </h2>
 
               <div className="form-group">
                 <label htmlFor="ownerName">Owner Name *</label>
@@ -341,7 +348,10 @@ export default function BusinessSetup() {
 
             {/* ADDRESS */}
             <div className="form-section">
-              <h2 className="form-section-title">📍 Business Address</h2>
+              <h2 className="form-section-title">
+                <MapPin size={24} strokeWidth={2} className="form-section-title-icon" />
+                Business Address
+              </h2>
 
               <div className="form-group">
                 <label htmlFor="address">Street Address *</label>
@@ -415,7 +425,10 @@ export default function BusinessSetup() {
 
             {/* FINANCIAL INFORMATION */}
             <div className="form-section">
-              <h2 className="form-section-title">💰 Financial Information</h2>
+              <h2 className="form-section-title">
+                <BadgeDollarSign size={24} strokeWidth={2} className="form-section-title-icon" />
+                Financial Information
+              </h2>
 
               <div className="form-row">
                 <div className="form-group">
@@ -453,7 +466,10 @@ export default function BusinessSetup() {
 
             {/* ZAKAT METHOD */}
             <div className="form-section">
-              <h2 className="form-section-title">📊 Zakat Calculation Method</h2>
+              <h2 className="form-section-title">
+                <Calculator size={24} strokeWidth={2} className="form-section-title-icon" />
+                Zakat Calculation Method
+              </h2>
 
               <div className="method-options">
                 {zakatMethods.map((method) => (

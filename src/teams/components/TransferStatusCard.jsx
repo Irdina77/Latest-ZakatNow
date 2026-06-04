@@ -96,7 +96,7 @@ export default function TransferStatusCard({
         <div className="receipt-row">
           <span>Ref No.</span>
           <strong>
-            {transfer?.transferId ||
+            {transfer?.paymentId || transfer?.transferId ||
               "TRF-2026-001"}
           </strong>
         </div>

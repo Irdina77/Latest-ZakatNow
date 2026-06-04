@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { HandCoins, BarChart3, Check, ArrowRight } from 'lucide-react';
 import { useLanguage } from "../context/LanguageContext";
 import { getTranslationSection } from "../translations/translations";
 
@@ -127,7 +128,7 @@ export default function ResultCard({ result }) {
         animate="visible"
       >
         <motion.div className="summary-item result-item-premium" variants={itemVariants}>
-          <div className="item-icon">💰</div>
+          <div className="item-icon"><HandCoins size={32} strokeWidth={2} /></div>
           <span className="item-label">{t.zakatAmount}</span>
           <motion.span
             className="item-value amount-animated"
@@ -140,13 +141,13 @@ export default function ResultCard({ result }) {
         </motion.div>
 
         <motion.div className="summary-item result-item-premium" variants={itemVariants}>
-          <div className="item-icon">📊</div>
+          <div className="item-icon"><BarChart3 size={32} strokeWidth={2} /></div>
           <span className="item-label">{t.calculationMethod}</span>
           <span className="item-value">{result.method}</span>
         </motion.div>
 
         <motion.div className="summary-item result-item-premium" variants={itemVariants}>
-          <div className="item-icon">✓</div>
+          <div className="item-icon"><Check size={32} strokeWidth={2} /></div>
           <span className="item-label">{t.paymentStatus}</span>
           <span className="item-value">
             {result.nisabStatus === "Eligible" ? "Payable" : "Not due"}
@@ -154,7 +155,7 @@ export default function ResultCard({ result }) {
         </motion.div>
 
         <motion.div className="summary-item result-item-premium" variants={itemVariants}>
-          <div className="item-icon">→</div>
+          <div className="item-icon"><ArrowRight size={32} strokeWidth={2} /></div>
           <span className="item-label">Recommended Action</span>
           <span className="item-value">
             {result.nisabStatus === "Eligible" ? "Proceed to pay" : "Recalculate later"}

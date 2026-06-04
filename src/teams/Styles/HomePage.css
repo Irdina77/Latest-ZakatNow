@@ -412,6 +412,31 @@
   color: #d4a017;
 }
 
+.user-menu-dropdown {
+  padding: 10px;
+}
+
+.user-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  color: #5f4b2f;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.user-menu-item:hover { background: #fff8ea; color: #b8860b; }
+
+.user-menu-item.active { background: rgba(212,160,23,0.06); color: #8b6526; }
+
+.user-menu-item.logout { color: #b33; font-weight: 800; }
+
 /* =====================================
    WELCOME
 ===================================== */
@@ -502,6 +527,10 @@
       23,
       0.12
     );
+}
+
+.feature-card.clickable {
+  cursor: pointer;
 }
 
 .feature-card svg {
@@ -661,99 +690,353 @@
 ===================================== */
 
 .nisab-section {
-  margin-top: 40px;
+  margin-top: 32px;
 }
 
 .nisab-card {
-  background:
-    linear-gradient(
-      180deg,
-      #fffdf9,
-      #fcf8f0
-    );
-
-  border:
-    1px solid
-    rgba(
-      212,
-      160,
-      23,
-      0.12
-    );
-
-  border-radius: 36px;
-
-  padding: 42px;
-
-  display: flex;
-  align-items: center;
-
-  gap: 40px;
-
-  box-shadow:
-    0 10px 30px
-    rgba(0,0,0,0.04);
+  background: linear-gradient(180deg, #fffaf2, #f6e7cd);
+  border: 1px solid rgba(212, 160, 23, 0.18);
+  border-radius: 28px;
+  padding: 24px;
+  box-shadow: 0 18px 40px rgba(139, 101, 38, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.nisab-left {
-  width: 40%;
+.nisab-card:hover {
+  transform: translateY(-2px);
 }
 
 .nisab-card h2 {
   font-family: 'Playfair Display', serif;
-  font-size: 56px;
+  font-size: 28px;
   font-weight: 700;
-  line-height: 1.05;
-  margin-bottom: 22px;
-  letter-spacing: -1px;
-  position: relative;
-
-  color: #8b6526;
-
-  text-shadow:
-    0 2px 8px
-    rgba(
-      139,
-      101,
-      38,
-      0.08
-    );
+  line-height: 1.15;
+  margin: 0;
+  color: #5a4210;
 }
 
 .nisab-card h2::after {
   content: "";
-
   position: absolute;
-
-  bottom: -12px;
+  bottom: -10px;
   left: 0;
-
-  width: 90px;
-  height: 5px;
-
+  width: 72px;
+  height: 4px;
   border-radius: 999px;
+  background: linear-gradient(90deg, #c89b3c, #9b7427);
+}
 
-  background:
-    linear-gradient(
-      90deg,
-      #c89b3c,
-      #8b6526
-    );
+.nisab-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8b6526;
+  margin-bottom: 10px;
 }
 
 .nisab-subtitle {
-  color: #6f5b40;
-
-  line-height: 1.9;
-
-  font-size: 18px;
-
+  color: #5f4a2d;
+  line-height: 1.75;
+  font-size: 15px;
   font-weight: 500;
+  margin: 10px 0 16px;
+  max-width: 520px;
+}
 
-  margin-top: 28px;
-  margin-bottom: 30px;
+/* Modern Nisab styles */
+.nisab-modern .nisab-main {
+  display: grid;
+  grid-template-columns: minmax(280px, 1.15fr) minmax(260px, 0.85fr);
+  gap: 24px;
+  align-items: start;
+}
 
-  max-width: 480px;
+.nisab-info {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.nisab-header {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.nisab-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #fff7ea, #f2e1b8);
+  display: grid;
+  place-items: center;
+  color: #a57a21;
+  box-shadow: 0 12px 24px rgba(139, 101, 38, 0.08);
+}
+
+.nisab-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  margin: 0;
+}
+
+.nisab-select-wrapper.modern {
+  margin-top: 0;
+}
+
+.nisab-select-label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 700;
+  color: #6f5b40;
+}
+
+.nisab-select-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #fff7ec, #f9efdd);
+  border: 1px solid rgba(212, 175, 55, 0.14);
+}
+
+.select-icon {
+  color: #8b6526;
+  flex-shrink: 0;
+}
+
+.modern-select {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  font-weight: 700;
+  color: #4a3717;
+  outline: none;
+}
+
+.modern-select option {
+  color: #4a3717;
+}
+
+.nisab-summary-card {
+  background: linear-gradient(180deg, #fffdf6, #f7eed6);
+  border-radius: 24px;
+  padding: 24px;
+  border: 1px solid rgba(212, 175, 55, 0.16);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: 0 10px 28px rgba(139, 101, 38, 0.08);
+}
+
+.summary-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.summary-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #f7e3b0, #d7ae51);
+  display: grid;
+  place-items: center;
+  color: #5a4210;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.45);
+}
+
+.summary-tag {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #6e5327;
+  text-transform: uppercase;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.08);
+}
+
+.summary-item:last-child {
+  border-bottom: none;
+}
+
+.summary-item-title {
+  color: #79603b;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.summary-item-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #3d2b13;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.summary-amount {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.summary-amount-label {
+  color: #79603b;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.summary-amount-value {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  color: #3d2b13;
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.summary-amount-value .rm-currency {
+  font-size: 18px;
+  color: #8b6526;
+  margin-right: 4px;
+}
+
+.summary-item.compact {
+  padding: 0;
+  border-bottom: none;
+}
+
+.selected-note {
+  color: #6b5942;
+  font-size: 13px;
+  line-height: 1.65;
+  padding-top: 8px;
+}
+
+.nisab-selected-panel:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(139,101,38,0.09);
+}
+
+@media (max-width: 900px) {
+  .nisab-modern .nisab-main {
+    grid-template-columns: 1fr;
+  }
+
+  .modern-select { width: 100%; }
+}
+
+@media (max-width: 900px) {
+  .nisab-modern .nisab-main {
+    grid-template-columns: 1fr;
+  }
+
+  .modern-select { width: 100%; }
+}
+
+/* Premium modal styles for About Zakat */
+.premium-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 16, 10, 0.45);
+  display: grid;
+  place-items: center;
+  z-index: 99999;
+  animation: fadeIn 220ms ease;
+}
+
+.premium-about-modal {
+  width: 780px;
+  max-width: calc(100% - 40px);
+  background: linear-gradient(180deg, #fffdf6, #fbf3db);
+  border-radius: 18px;
+  padding: 26px 28px;
+  box-shadow: 0 30px 80px rgba(60,40,10,0.25);
+  position: relative;
+  border: 1px solid rgba(212,175,55,0.12);
+  transform: translateY(-6px);
+  animation: slideUp 260ms ease;
+}
+
+.premium-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  border: none;
+  background: rgba(255,255,255,0.6);
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.premium-about-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.premium-about-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #fff8ea, #f3e5c4);
+  display: grid;
+  place-items: center;
+  color: #a57a21;
+}
+
+.premium-about-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.about-section h3 {
+  font-size: 16px;
+  margin: 0 0 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #4a3512;
+}
+
+.about-section p {
+  margin: 0;
+  color: #6f6250;
+  line-height: 1.7;
+}
+
+@media (max-width: 780px) {
+  .premium-about-body { grid-template-columns: 1fr; }
+  .premium-about-modal { padding: 18px; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(6px); opacity: 0 }
+  to { transform: translateY(0); opacity: 1 }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0 }
+  to { opacity: 1 }
 }
 
 .nisab-btn {

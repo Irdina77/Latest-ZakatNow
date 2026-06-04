@@ -115,7 +115,7 @@
 .zakat-button {
   width: 100%;
   padding: 16px 24px;
-  border-radius: 16px;
+  border-radius: 20px;
   border: none;
   font-weight: 700;
   font-size: 15px;
@@ -141,6 +141,35 @@
 
 .zakat-button-primary {
   background: linear-gradient(135deg, #2d6cdf, #4c8bf5);
+}
+
+.zakat-button.premium-pay-btn {
+  border-radius: 20px;
+  background: linear-gradient(135deg, #d8ae4e 0%, #c89b3c 50%, #8b6526 100%);
+  color: white;
+  box-shadow: 0 8px 24px rgba(200, 155, 60, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.zakat-button.premium-pay-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.zakat-button.premium-pay-btn:not(:disabled):hover::before {
+  left: 100%;
+}
+
+.zakat-button.premium-pay-btn:not(:disabled):hover {
+  background: linear-gradient(135deg, #e0b856 0%, #d4a94a 50%, #9a7235 100%);
+  box-shadow: 0 12px 32px rgba(200, 155, 60, 0.35);
 }
 
 .zakat-button-secondary {
@@ -861,4 +890,9 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
+}
+
+/* Adjust navbar spacing when left hamburger is removed for this page */
+.zakat-container .premium-navbar .premium-nav-menu {
+  margin-left: 40px; /* slightly reduced to keep balance */
 }

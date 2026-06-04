@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CalendarDays, DollarSign, Target, TrendingUp } from 'lucide-react';
+import { CircleHelp, MapPin, BadgeDollarSign, CalendarClock, ArrowLeft, ArrowRight, CalendarDays, DollarSign, Target, TrendingUp } from 'lucide-react';
 import SidebarDrawer from '../components/SidebarDrawer';
 import { getUserState, setUserState } from '../utils/userStateStorage';
 import '../Styles/NisabPage.css';
-import zakatIcon from '../../teams/assets/zakat-icon.webp';
 
 const stateOptions = [
   'Selangor',
@@ -173,22 +172,28 @@ export default function NisabPage() {
 
           {/* Information Card */}
           <section className="nisab-info-card">
-            <h3 className="nisab-info-title">💡 What is Nisab?</h3>
+            <h3 className="nisab-info-title">
+              <CircleHelp size={24} strokeWidth={2} className="nisab-info-title-icon" />
+              What is Nisab?
+            </h3>
             <p className="nisab-info-text">
-              Nisab refers to the minimum amount of wealth required before zakat becomes obligatory. 
-              Business zakat is payable when your total assets exceed the nisab threshold for the full lunar year. 
-              The nisab amount is calculated based on the price of gold (85 grams) in your state and is updated annually 
+              Nisab refers to the minimum amount of wealth required before zakat becomes obligatory.
+              Business zakat is payable when your total assets exceed the nisab threshold for the full lunar year.
+              The nisab amount is calculated based on the price of gold (85 grams) in your state and is updated annually
               to reflect changes in market prices.
             </p>
             <div className="nisab-info-details">
               <div className="nisab-info-detail-item">
-                <strong>📌 Current State:</strong> {selectedState}
+                <span className="nisab-info-detail-icon"><MapPin size={18} strokeWidth={2} /></span>
+                <strong>Current State:</strong> {selectedState}
               </div>
               <div className="nisab-info-detail-item">
-                <strong>💵 Nisab Amount:</strong> RM {nisabAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                <span className="nisab-info-detail-icon"><BadgeDollarSign size={18} strokeWidth={2} /></span>
+                <strong>Nisab Amount:</strong> RM {nisabAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </div>
               <div className="nisab-info-detail-item">
-                <strong>⏰ Update Frequency:</strong> Annually (or when gold price changes significantly)
+                <span className="nisab-info-detail-icon"><CalendarClock size={18} strokeWidth={2} /></span>
+                <strong>Update Frequency:</strong> Annually (or when gold price changes significantly)
               </div>
             </div>
           </section>
@@ -196,16 +201,18 @@ export default function NisabPage() {
           {/* Action Buttons */}
           <section className="nisab-actions">
             <button
-              className="btn premium-back-btn"
+              className="nisab-btn-secondary"
               onClick={() => navigate('/dashboard')}
             >
-              ← Back to Dashboard
+              <ArrowLeft size={18} strokeWidth={2} />
+              Back to Dashboard
             </button>
             <button
-              className="btn premium-pay-btn"
+              className="nisab-btn-primary"
               onClick={() => navigate('/calculator')}
             >
-              Go to Calculator →
+              Go to Calculator
+              <ArrowRight size={18} strokeWidth={2} />
             </button>
           </section>
         </main>

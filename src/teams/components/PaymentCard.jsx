@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { Check, ArrowLeft, ArrowRight, Star } from 'lucide-react';
 
 import maybankLogo from "../assets/maybank.png";
 import cimbLogo from "../assets/cimb.png";
@@ -12,7 +13,29 @@ import fpxLogo from "../assets/fpx.jpg";
 import jompayLogo from "../assets/jompay.png";
 import duitnowLogo from "../assets/duitnow.jpg";
 
-const gatewayOptions = ["FPX Online Banking", "JomPay", "DuitNow QR"];
+const paymentMethods = [
+  {
+    id: "fpx",
+    label: "FPX Online Banking",
+    selectedLabel: "FPX Online Banking",
+    description: "Fast online banking",
+    logo: fpxLogo,
+  },
+  {
+    id: "jompay",
+    label: "JomPAY",
+    selectedLabel: "JomPAY",
+    description: "Biller code payment",
+    logo: jompayLogo,
+  },
+  {
+    id: "duitnow",
+    label: "DuitNow QR",
+    selectedLabel: "DuitNow QR",
+    description: "Secure QR payment",
+    logo: duitnowLogo,
+  },
+];
 const bankingTypes = ["Personal Banking", "Corporate Banking"];
 
 const bankOptions = [
@@ -76,7 +99,7 @@ const bankOptions = [
 
 export default function PaymentCard({ payment, onPay, onBack }) {
   const [step, setStep] = useState("gateway");
-  const [selectedGateway, setSelectedGateway] = useState(gatewayOptions[0]);
+  const [selectedGateway, setSelectedGateway] = useState(paymentMethods[0].id);
   const [bankType, setBankType] = useState(bankingTypes[0]);
   const [selectedBank, setSelectedBank] = useState(bankOptions[0].name);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -98,6 +121,10 @@ export default function PaymentCard({ payment, onPay, onBack }) {
     maximumFractionDigits: 2,
   });
 
+  const currentGateway =
+    paymentMethods.find((method) => method.id === selectedGateway) ||
+    paymentMethods[0];
+
   const currentBank =
     bankOptions.find((bank) => bank.name === selectedBank) || bankOptions[0];
 
@@ -106,21 +133,11 @@ export default function PaymentCard({ payment, onPay, onBack }) {
   const handleConfirm = () => {
     setShowConfirm(false);
 
-    if (
-      selectedGateway ===
-      "FPX Online Banking"
-    ) {
+    if (selectedGateway === "fpx") {
       setStep("fpx");
-    }
-
-    else if (
-      selectedGateway ===
-      "JomPay"
-    ) {
+    } else if (selectedGateway === "jompay") {
       setStep("jompay");
-    }
-
-    else {
+    } else {
       setStep("duitnow");
     }
   };
@@ -129,15 +146,20 @@ export default function PaymentCard({ payment, onPay, onBack }) {
     if (event) event.preventDefault();
 
     setIsProcessing(true);
+    const transactionId = generateTransactionId();
 
     setTimeout(() => {
       if (onPay) {
         onPay({
           ...payment,
-          gateway: selectedGateway,
+          paymentId: transactionId,
+          transactionId,
+          paymentMethod: currentGateway.selectedLabel,
+          gateway: currentGateway.selectedLabel,
           bankName:
-            selectedGateway === "FPX Online Banking" ? selectedBank : "JomPay",
-          transactionId: generateTransactionId(),
+            selectedGateway === "fpx"
+              ? selectedBank
+              : currentGateway.selectedLabel,
           amount: amountNumber,
           status: "Success",
         });
@@ -186,78 +208,36 @@ export default function PaymentCard({ payment, onPay, onBack }) {
 
           <div className="gateway-grid">
 
-            {gatewayOptions.map(
-              (gateway) => (
+            {paymentMethods.map((method) => (
+              <button
+                key={method.id}
+                type="button"
+                className={`gateway-option ${selectedGateway === method.id ? "selected" : ""}`}
+                onClick={() => setSelectedGateway(method.id)}
+              >
+                {method.id === "fpx" && (
+                  <div className="recommended-tag">
+                    <span className="recommended-icon">
+                      <Star size={14} strokeWidth={2} />
+                    </span>
 
-                <button
-                  key={gateway}
-                  type="button"
-                  className={`gateway-option ${selectedGateway ===
-                    gateway
-                    ? "selected"
-                    : ""
-                    }`}
-                  onClick={() =>
-                    setSelectedGateway(
-                      gateway
-                    )
-                  }
-                >
-                  {gateway ===
-                    "FPX Online Banking" && (
-                      <div className="recommended-tag">
-                        <span className="recommended-icon">
-                          ☆
-                        </span>
-
-                        Recommended
-                      </div>
-                    )}
-
-                  <span className="gateway-check">
-                    {selectedGateway ===
-                      gateway
-                      ? "✓"
-                      : ""}
-                  </span>
-
-                  <div className="gateway-image">
-                    <img
-                      src={
-                        gateway === "FPX Online Banking"
-                          ? fpxLogo
-                          : gateway === "JomPay"
-                            ? jompayLogo
-                            : duitnowLogo
-                      }
-                      alt={gateway}
-                      className="gateway-logo"
-                    />
+                    Recommended
                   </div>
+                )}
 
-                  <strong>
-                    {selectedGateway ===
-                      "FPX Online Banking"
-                      ? selectedBank
-                      : selectedGateway ===
-                        "JomPay"
-                        ? "JomPay"
-                        : "DuitNow QR"}
-                  </strong>
+                <span className="gateway-check">
+                  {selectedGateway === method.id ? <Check size={16} strokeWidth={2} /> : null}
+                </span>
 
-                  <small>
-                    {gateway ===
-                      "FPX Online Banking"
-                      ? "Fast online banking"
-                      : gateway ===
-                        "JomPay"
-                        ? "Biller code payment"
-                        : "Secure QR payment"}
-                  </small>
+                <div className="gateway-image">
+                  <img src={method.logo} alt={method.label} className="gateway-logo" />
+                </div>
 
-                </button>
-              )
-            )}
+                <strong>{method.label}</strong>
+
+                <small>{method.description}</small>
+              </button>
+            ))}
 
           </div>
 
@@ -269,7 +249,7 @@ export default function PaymentCard({ payment, onPay, onBack }) {
 
             <div>
               <span>Selected Gateway</span>
-              <strong>{selectedGateway}</strong>
+              <strong>{currentGateway.selectedLabel}</strong>
             </div>
           </div>
 
@@ -280,7 +260,7 @@ export default function PaymentCard({ payment, onPay, onBack }) {
               type="button"
               onClick={onBack}
             >
-              ← Back
+              <ArrowLeft size={18} strokeWidth={2} /> Back
             </button>
 
             <button
@@ -297,12 +277,12 @@ export default function PaymentCard({ payment, onPay, onBack }) {
 
       {step === "fpx" && (
         <>
-          <div className="fpx-card-header">
+            <div className="fpx-card-header">
             <div>
               <h2>FPX Online Banking</h2>
               <p>Choose your banking type and bank for secure checkout.</p>
             </div>
-            <span className="secure-fpx">🔒 Secure FPX</span>
+            <span className="secure-fpx">Secure FPX</span>
           </div>
 
           {renderStepIndicator()}
@@ -351,7 +331,7 @@ export default function PaymentCard({ payment, onPay, onBack }) {
                   <span className="bank-subtitle">{bank.subtitle}</span>
                 </div>
 
-                {selectedBank === bank.name && <span className="bank-tick">✓</span>}
+                {selectedBank === bank.name && <span className="bank-tick"><Check size={16} strokeWidth={2} /></span>}
               </button>
             ))}
           </div>
@@ -374,7 +354,7 @@ export default function PaymentCard({ payment, onPay, onBack }) {
               type="button"
               onClick={() => setStep("gateway")}
             >
-              ← Back
+              <ArrowLeft size={18} strokeWidth={2} /> Back
             </button>
 
             <button
@@ -382,7 +362,7 @@ export default function PaymentCard({ payment, onPay, onBack }) {
               type="button"
               onClick={() => setStep("login")}
             >
-              Continue to Login →
+              Continue to Login <ArrowRight size={18} strokeWidth={2} />
             </button>
           </div>
         </>
@@ -390,13 +370,13 @@ export default function PaymentCard({ payment, onPay, onBack }) {
 
       {step === "login" && (
         <div className="bank-login-page">
-          <div className="bank-topbar" style={{ background: currentBank.dark }}>
+            <div className="bank-topbar" style={{ background: currentBank.dark }}>
             <img
               src={currentBank.logo}
               alt={currentBank.name}
               className="bank-login-logo"
             />
-            <span>🔒 Secure Connection</span>
+            <span>Secure Connection</span>
           </div>
 
           <div className="bank-login-content">
@@ -431,7 +411,7 @@ export default function PaymentCard({ payment, onPay, onBack }) {
                 type="submit"
                 disabled={isProcessing}
               >
-                🔒 {isProcessing ? "Processing..." : "Login & Pay"}
+                {isProcessing ? "Processing..." : "Login & Pay"}
               </button>
 
               <button
@@ -439,7 +419,7 @@ export default function PaymentCard({ payment, onPay, onBack }) {
                 type="button"
                 onClick={() => setStep("fpx")}
               >
-                ← Back to Bank Selection
+                <ArrowLeft size={18} strokeWidth={2} /> Back to Bank Selection
               </button>
             </form>
 
@@ -490,7 +470,7 @@ export default function PaymentCard({ payment, onPay, onBack }) {
               type="button"
               onClick={() => setStep("gateway")}
             >
-              ← Choose Another Method
+              <ArrowLeft size={18} strokeWidth={2} /> Choose Another Method
             </button>
 
             <button
@@ -503,7 +483,7 @@ export default function PaymentCard({ payment, onPay, onBack }) {
                 completePayment();
               }}
             >
-              ✓ I Have Paid
+              <Check size={16} strokeWidth={2} /> I Have Paid
             </button>
           </div>
         </>
@@ -571,23 +551,17 @@ export default function PaymentCard({ payment, onPay, onBack }) {
               <button
                 className="btn premium-back-btn"
                 type="button"
-                onClick={() =>
-                  setStep(
-                    "gateway"
-                  )
-                }
+                onClick={() => setStep("gateway")}
               >
-                ← Back
+                <ArrowLeft size={18} strokeWidth={2} /> Back
               </button>
 
               <button
                 className="btn premium-pay-btn"
                 type="button"
-                onClick={
-                  completePayment
-                }
+                onClick={completePayment}
               >
-                ✓ I Have Paid
+                <Check size={16} strokeWidth={2} /> I Have Paid
               </button>
 
             </div>
@@ -596,8 +570,8 @@ export default function PaymentCard({ payment, onPay, onBack }) {
       )}
 
       {step === "success" && (
-        <div className="payment-success-real">
-          <div className="success-circle">✓</div>
+          <div className="payment-success-real">
+          <div className="success-circle"><Check size={32} strokeWidth={2} /></div>
           <h2>Payment Successful</h2>
           <p>Your zakat payment has been completed.</p>
 
@@ -609,15 +583,15 @@ export default function PaymentCard({ payment, onPay, onBack }) {
 
             <div>
               <span>Method</span>
-              <strong>{selectedGateway}</strong>
+              <strong>{currentGateway.selectedLabel}</strong>
             </div>
 
             <div>
               <span>Bank</span>
               <strong>
-                {selectedGateway === "FPX Online Banking"
+                {selectedGateway === "fpx"
                   ? selectedBank
-                  : "JomPay"}
+                  : currentGateway.selectedLabel}
               </strong>
             </div>
 
@@ -653,7 +627,7 @@ export default function PaymentCard({ payment, onPay, onBack }) {
 
             <div className="modal-actions">
               <button className="btn premium-pay-btn" type="button" onClick={handleConfirm}>
-                ✓ Ya, Teruskan
+                <Check size={16} strokeWidth={2} /> Ya, Teruskan
               </button>
 
               <button

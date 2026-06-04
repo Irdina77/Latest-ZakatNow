@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SidebarDrawer from '../components/SidebarDrawer';
+import { UserRound } from 'lucide-react';
 import '../Styles/Profile.css';
 
 export default function Profile() {
@@ -90,7 +91,7 @@ export default function Profile() {
               {userData.avatarUrl ? (
                 <img src={userData.avatarUrl} alt="Profile avatar" className="profile-image" />
               ) : (
-                <div className="profile-placeholder">👤</div>
+                <div className="profile-placeholder"><UserRound size={36} strokeWidth={2} /></div>
               )}
               <label className="profile-upload-label">
                 Change Image

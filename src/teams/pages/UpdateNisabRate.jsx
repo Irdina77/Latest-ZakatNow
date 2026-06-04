@@ -3,6 +3,7 @@ import NisabCard from "../components/NisabCard";
 import UpdateForm from "../components/UpdateForm";
 import ConfirmModal from "../components/ConfirmModel";
 import "../Styles/UpdateNisabRate.css";
+import { Bell, Settings, UserRound } from 'lucide-react';
 
 export default function UpdateNisabRate({
   data,
@@ -103,7 +104,7 @@ export default function UpdateNisabRate({
           </div>
 
           <div className="dashboard-right">
-            <span className="top-icon">🔔</span>
+            <span className="top-icon"><Bell size={18} strokeWidth={2} /></span>
 
             <div
               className="setting-dropdown-wrapper"
@@ -114,7 +115,7 @@ export default function UpdateNisabRate({
                 onClick={() => setShowSettingMenu((prev) => !prev)}
                 style={{ cursor: "pointer" }}
               >
-                ⚙️
+                <Settings size={18} strokeWidth={2} />
               </span>
 
               {showSettingMenu && (
@@ -131,7 +132,7 @@ export default function UpdateNisabRate({
             </div>
 
             <div className="admin-box">
-              <div className="admin-avatar">👤</div>
+              <div className="admin-avatar"><UserRound size={36} strokeWidth={2} /></div>
               <div>
                 <div className="admin-name">Admin</div>
                 <div className="admin-role">Super Admin</div>

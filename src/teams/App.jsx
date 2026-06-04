@@ -6,6 +6,8 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { LanguageProvider } from "./context/LanguageContext";
+import { auth, db } from "./firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -16,6 +18,7 @@ import NisabPage from "./pages/NisabPage";
 import BusinessSetup from "./pages/BusinessSetup";
 import ResultPage from "./pages/ResultPage";
 import PaymentPage from "./pages/PaymentPage";
+import CheckZakatHistory from "./pages/CheckZakatHistory";
 import TransferPage from "./pages/TransferPage";
 import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -93,15 +96,80 @@ export default function App() {
     navigate("/login");
   };
 
-  const handlePaymentSuccess = () => {
+  const handlePaymentSuccess = async (paymentData = {}) => {
+    const transactionId =
+      paymentData.transactionId ||
+      paymentData.paymentId ||
+      payment.paymentId ||
+      `PAY-${Date.now().toString().slice(-10)}`;
+
+    const amountValue = Number(
+      paymentData.amount ||
+        paymentData.zakatAmount ||
+        payment.amount ||
+        0
+    );
+
+    const paymentMethod =
+      paymentData.paymentMethod ||
+      paymentData.gateway ||
+      payment.gateway ||
+      "FPX Online Banking";
+
+    const bankName =
+      paymentData.bankName ||
+      payment?.bankName ||
+      paymentMethod ||
+      "FPX Online Banking";
+
+    const zakatType =
+      result?.method || paymentData.zakatType || payment.zakatType || "Business Zakat";
+
+    const user = auth.currentUser;
+    const record = {
+      userId: user?.uid || null,
+      email: user?.email || "",
+      paymentId: transactionId,
+      transactionId,
+      amount: amountValue,
+      paymentMethod,
+      gateway: paymentMethod,
+      bankName,
+      status: paymentData.status || "Success",
+      zakatType,
+      paymentDate: serverTimestamp(),
+      createdAt: serverTimestamp(),
+      receiptUrl: paymentData.receiptUrl || null,
+    };
+
+    try {
+      if (user) {
+        await addDoc(collection(db, "payments"), record);
+      } else {
+        console.warn("Payment completed without authenticated user. Record not saved.");
+      }
+    } catch (saveError) {
+      console.error("Error saving payment record:", saveError);
+    }
+
     setPayment((prev) => ({
       ...prev,
-      status: "Success",
+      ...paymentData,
+      paymentId: transactionId,
+      transactionId,
+      amount: amountValue,
+      status: paymentData.status || "Success",
+      gateway: paymentMethod,
+      paymentMethod,
     }));
 
     setTransfer((prev) => ({
       ...prev,
-      status: "Success",
+      status: paymentData.status || "Success",
+      amount: amountValue,
+      bankName,
+      transferId: transactionId,
+      zakatType,
     }));
 
     navigate("/transfer");
@@ -232,6 +300,28 @@ export default function App() {
                 onPay={handlePaymentSuccess}
                 onBack={() => navigate("/dashboard")}
               />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+
+        <Route
+          path="/check-zakat"
+          element={
+            isLoggedIn ? (
+              <CheckZakatHistory />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+
+        <Route
+          path="/payment-history"
+          element={
+            isLoggedIn ? (
+              <CheckZakatHistory />
             ) : (
               <Navigate to="/login" replace />
             )

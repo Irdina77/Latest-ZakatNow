@@ -10,6 +10,7 @@ import zakatIcon from "../../teams/assets/zakat-icon.webp";
 
 import Chatbot from "../components/Chatbot";
 import SidebarDrawer from "../components/SidebarDrawer";
+import { House, Calculator, Building2, BadgeDollarSign, UserRound, CreditCard, Landmark, BarChart3, CheckCircle2, HandCoins } from 'lucide-react';
 
 export default function Dashboard({
   currentNisab = {
@@ -149,7 +150,7 @@ export default function Dashboard({
                       setShowLogoMenu(false);
                     }}
                   >
-                    🏠 Home Page
+                    <House size={18} strokeWidth={2} /> Home Page
                   </button>
 
                   <button
@@ -159,7 +160,7 @@ export default function Dashboard({
                       setShowLogoMenu(false);
                     }}
                   >
-                    🧮 Calculate Zakat
+                    <Calculator size={18} strokeWidth={2} /> Calculate Zakat
                   </button>
 
                   <button
@@ -169,7 +170,7 @@ export default function Dashboard({
                       setShowLogoMenu(false);
                     }}
                   >
-                    🏢 Business Setup
+                    <Building2 size={18} strokeWidth={2} /> Business Setup
                   </button>
 
                   <button
@@ -179,7 +180,7 @@ export default function Dashboard({
                       setShowLogoMenu(false);
                     }}
                   >
-                    📈 Nisab Rate
+                    <BarChart3 size={18} strokeWidth={2} /> Nisab Rate
                   </button>
 
                   <button
@@ -189,7 +190,7 @@ export default function Dashboard({
                       setShowLogoMenu(false);
                     }}
                   >
-                    👤 Profile
+                    <UserRound size={18} strokeWidth={2} /> Profile
                   </button>
 
                   <button
@@ -199,7 +200,7 @@ export default function Dashboard({
                       setShowLogoMenu(false);
                     }}
                   >
-                    💳 Pay Zakat
+                    <CreditCard size={18} strokeWidth={2} /> Pay Zakat
                   </button>
 
                   <hr className="user-menu-divider" />
@@ -277,13 +278,13 @@ export default function Dashboard({
               <div className="hero-illustration">
 
                 <div className="illustration-main">
-                  🕌
+                  <Landmark size={64} />
                 </div>
 
                 <div className="illustration-icons">
-                  <span>🧮</span>
-                  <span>💰</span>
-                  <span>💳</span>
+                  <Calculator size={32} strokeWidth={2} />
+                  <HandCoins size={32} strokeWidth={2} />
+                  <CreditCard size={32} strokeWidth={2} />
                 </div>
 
               </div>
@@ -298,7 +299,7 @@ export default function Dashboard({
 
             <div className="summary-card">
               <div className="summary-icon">
-                💰
+                <BadgeDollarSign size={32} strokeWidth={2} />
               </div>
 
               <div className="summary-content">
@@ -317,7 +318,7 @@ export default function Dashboard({
 
             <div className="summary-card">
               <div className="summary-icon">
-                📈
+                <BarChart3 size={32} strokeWidth={2} />
               </div>
 
               <div className="summary-content">
@@ -333,7 +334,7 @@ export default function Dashboard({
 
             <div className="summary-card">
               <div className="summary-icon">
-                ✅
+                <CheckCircle2 size={32} strokeWidth={2} />
               </div>
 
               <div className="summary-content">

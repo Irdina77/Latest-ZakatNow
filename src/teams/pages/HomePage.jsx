@@ -2,10 +2,11 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
-import { Calculator, HandCoins, ReceiptText } from "lucide-react";
+import { Calculator, HandCoins, ReceiptText, Building2, Check, BadgeDollarSign, MapPin, Calendar } from "lucide-react";
 import { getUserState, setUserState } from "../utils/userStateStorage";
 
 import SidebarDrawer from "../components/SidebarDrawer";
+import Navbar from "../components/Navbar";
 import "../Styles/HomePage.css";
 import zakatIcon from "../../teams/assets/zakat-icon.webp";
 
@@ -92,112 +93,7 @@ export default function HomePage() {
   return (
     <>
       <div className="home-page">
-        <header className="premium-navbar">
-          <div className="navbar-container" ref={menuRef}>
-            <div className="navbar-left">
-              <button
-                className="navbar-logo-button"
-                onClick={() => navigate("/dashboard")}
-              >
-                <img src={zakatIcon} alt="logo" className="navbar-logo" />
-
-                <div>
-                  <span className="navbar-brand-name">ZakatNow</span>
-                  <p className="navbar-subtitle">Smart AI-Powered Zakat</p>
-                </div>
-              </button>
-            </div>
-
-            <nav className="premium-nav-menu">
-              <button onClick={() => navigate("/dashboard")}>HOME PAGE</button>
-              <button onClick={() => navigate("/calculator")}>
-                CALCULATE ZAKAT
-              </button>
-              <button onClick={() => navigate("/payment")}>PAY ZAKAT</button>
-              <button onClick={() => navigate("/nisab")}>NISAB RATE</button>
-            </nav>
-
-            <div className="navbar-menu-right user-navbar-right">
-              <button
-                className="admin-hamburger user-hamburger"
-                onClick={() => setShowLogoMenu(!showLogoMenu)}
-              >
-                <span className="hamburger-line"></span>
-                <span className="hamburger-line"></span>
-              </button>
-
-              {showLogoMenu && (
-                <div className="user-menu-dropdown">
-                  <button
-                    className="user-menu-item active"
-                    onClick={() => {
-                      navigate("/dashboard");
-                      setShowLogoMenu(false);
-                    }}
-                  >
-                    Home Page
-                  </button>
-
-                  <button
-                    className="user-menu-item"
-                    onClick={() => {
-                      navigate("/calculator");
-                      setShowLogoMenu(false);
-                    }}
-                  >
-                    Calculate Zakat
-                  </button>
-
-                  <button
-                    className="user-menu-item"
-                    onClick={() => {
-                      navigate("/business-setup");
-                      setShowLogoMenu(false);
-                    }}
-                  >
-                    Business Setup
-                  </button>
-
-                  <button
-                    className="user-menu-item"
-                    onClick={() => {
-                      navigate("/nisab");
-                      setShowLogoMenu(false);
-                    }}
-                  >
-                    Nisab Rate
-                  </button>
-
-                  <button
-                    className="user-menu-item"
-                    onClick={() => {
-                      navigate("/profile");
-                      setShowLogoMenu(false);
-                    }}
-                  >
-                    Profile
-                  </button>
-
-                  <button
-                    className="user-menu-item"
-                    onClick={() => {
-                      navigate("/payment");
-                      setShowLogoMenu(false);
-                    }}
-                  >
-                    Pay Zakat
-                  </button>
-
-                  <hr className="user-menu-divider" />
-
-                  <button className="user-menu-item logout" onClick={handleLogout}>
-                    Log Out
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </header>
+        <Navbar current="home" rightOpenDrawer={() => setIsDrawerOpen(true)} />
 
         <main className="home-main">
           <section className="hero-video-section">
@@ -244,7 +140,17 @@ export default function HomePage() {
               <button onClick={() => navigate("/payment")}></button>
             </div>
 
-            <div className="feature-card">
+            <div
+              className="feature-card clickable"
+              role="button"
+              tabIndex={0}
+              onClick={() => navigate("/check-zakat")}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  navigate("/check-zakat");
+                }
+              }}
+            >
               <div className="feature-icon">
                 <ReceiptText size={34} strokeWidth={2} />
               </div>
@@ -254,55 +160,102 @@ export default function HomePage() {
                 <p>Review your zakat payment history easily.</p>
               </div>
 
-              <button onClick={() => navigate("/check-zakat")}></button>
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  navigate("/check-zakat");
+                }}
+              ></button>
             </div>
           </section>
 
           <section className="nisab-section">
-  <div className="nisab-card nisab-malaysia-card">
-    <div className="nisab-left">
-      <div className="nisab-badge">🏢</div>
+            <div className="nisab-card nisab-modern">
+              <div className="nisab-main">
+                <div className="nisab-info">
+                  <div className="nisab-header">
+                    <div className="nisab-icon">
+                      <Building2 size={28} strokeWidth={2} />
+                    </div>
+                    <div>
+                      <div className="nisab-eyebrow">
+                        <BadgeDollarSign size={16} strokeWidth={2} />
+                        BUSINESS NISAB
+                      </div>
+                      <h2 className="nisab-title">NISAB ZAKAT PERNIAGAAN 2026</h2>
+                    </div>
+                  </div>
 
-      <div>
-        <h2>NISAB ZAKAT PERNIAGAAN 2026</h2>
+                  <p className="nisab-subtitle">
+                    Choose your state to apply the correct business nisab rate and calculate zakat accurately.
+                  </p>
 
-        <p className="nisab-subtitle">
-          Select your state to apply the correct business zakat nisab rate.
-        </p>
+                  <div className="nisab-select-wrapper modern">
+                    <label className="nisab-select-label">State</label>
+                    <div className="nisab-select-field">
+                      <MapPin size={16} strokeWidth={2} className="select-icon" />
+                      <select
+                        className="nisab-state-select modern-select"
+                        value={selectedState}
+                        onChange={(e) => {
+                          const newState = e.target.value;
+                          setSelectedState(newState);
+                          setUserState(newState);
+                        }}
+                      >
+                        {nisabStates2026.map((item) => (
+                          <option key={item.state} value={item.state}>
+                            {item.state}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
 
-        <div className="nisab-select-wrapper">
-          <label>Select State</label>
+                <div className="nisab-summary-card">
+                  <div className="summary-top">
+                    <div className="summary-icon">
+                      <BadgeDollarSign size={18} strokeWidth={2} />
+                    </div>
+                    <div className="summary-tag">Premium summary</div>
+                  </div>
 
-          <select
-            className="nisab-state-select"
-            value={selectedState}
-            onChange={(e) => {
-              const newState = e.target.value;
-              setSelectedState(newState);
-              setUserState(newState);
-            }}
-          >
-            {nisabStates2026.map((item) => (
-              <option key={item.state} value={item.state}>
-                {item.state}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-    </div>
+                  <div className="summary-item">
+                    <div className="summary-item-title">Selected State</div>
+                    <div className="summary-item-value">{selectedNisab.state}</div>
+                  </div>
 
-    <div className="nisab-selected-box">
-      <h4>Selected State</h4>
-      <h3>{selectedNisab.state}</h3>
+                  <div className="summary-item">
+                    <div className="summary-item-title">Current Year</div>
+                    <div className="summary-item-value">
+                      <Calendar size={14} strokeWidth={2} /> 2026
+                    </div>
+                  </div>
 
-      <h4>Business Nisab 2026</h4>
-      <h2>RM {selectedNisab.value.toLocaleString()}</h2>
+                  <div className="summary-amount">
+                    <div className="summary-amount-label">Business Nisab Value</div>
+                    <div className="summary-amount-value">
+                      <span className="rm-currency">RM</span>
+                      <strong>{selectedNisab.value.toLocaleString()}</strong>
+                    </div>
+                  </div>
 
-      <p>This nisab rate will be saved for zakat business calculation.</p>
-    </div>
-  </div>
-</section>
+                  <div className="summary-item compact">
+                    <div className="summary-item-title">Zakat Rate</div>
+                    <div className="summary-item-value">
+                      <MapPin size={14} strokeWidth={2} /> 2.5%
+                    </div>
+                  </div>
+
+                  <div className="selected-note">
+                    Accurate nisab calculations help you stay compliant with every zakat payment.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
         </main>
       </div>
 
@@ -345,15 +298,12 @@ export default function HomePage() {
 
               <div className="about-box">
                 <h3>Benefits of Zakat</h3>
-                <p>
-                  ✔ Purifies wealth
-                  <br />
-                  ✔ Helps the poor
-                  <br />
-                  ✔ Strengthens society
-                  <br />
-                  ✔ Gains blessings
-                </p>
+                <ul>
+                  <li><Check size={16} strokeWidth={2} /> Purifies wealth</li>
+                  <li><Check size={16} strokeWidth={2} /> Helps the poor</li>
+                  <li><Check size={16} strokeWidth={2} /> Strengthens society</li>
+                  <li><Check size={16} strokeWidth={2} /> Gains blessings</li>
+                </ul>
               </div>
             </div>
           </div>

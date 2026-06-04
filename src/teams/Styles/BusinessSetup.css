@@ -42,13 +42,16 @@
   border-radius: 12px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
   font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .setup-back-btn:hover {
-  transform: translateX(-4px);
-  box-shadow: 0 4px 12px rgba(212, 160, 23, 0.3);
+  transform: translateX(-2px);
+  box-shadow: 0 6px 16px rgba(212, 160, 23, 0.32);
 }
 
 .setup-title {
@@ -61,10 +64,12 @@
   margin: 0;
 }
 
+.setup-title-icon {
+  color: #8b6526;
+}
+
 .setup-logo {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
+  display: none;
 }
 
 /* MAIN CONTENT */
@@ -102,10 +107,19 @@
 }
 
 .form-section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   font-size: 1.3rem;
   font-weight: 700;
   color: #3b2a0a;
   margin: 0 0 10px;
+}
+
+.form-section-title-icon {
+  color: #d4a017;
+  min-width: 24px;
+  min-height: 24px;
 }
 
 /* FORM GROUP */

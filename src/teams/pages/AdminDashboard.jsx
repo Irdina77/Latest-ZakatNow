@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
 import { getTranslationSection } from "../translations/translations";
 import "../Styles/AdminDashboard.css";
+import { BarChart3, Pencil, CreditCard, UserRound, BadgeDollarSign } from 'lucide-react';
 import zakatIcon from "../assets/zakat-icon.webp";
 
 export default function AdminDashboard() {
@@ -154,11 +155,11 @@ export default function AdminDashboard() {
         {/* OVERVIEW TAB */}
         {activeTab === "overview" && (
           <section className="admin-section">
-            <h1 className="admin-page-title">📊 Admin Dashboard</h1>
+            <h1 className="admin-page-title"><BarChart3 size={18} strokeWidth={2} /> Admin Dashboard</h1>
 
             <div className="admin-stats-grid">
               <div className="admin-stat-card">
-                <div className="stat-icon">👥</div>
+                <div className="stat-icon"><UserRound size={32} strokeWidth={2} /></div>
                 <div className="stat-content">
                   <p className="stat-label">Total Users</p>
                   <h3 className="stat-value">{stats.totalUsers}</h3>
@@ -166,7 +167,7 @@ export default function AdminDashboard() {
               </div>
 
               <div className="admin-stat-card">
-                <div className="stat-icon">💰</div>
+                <div className="stat-icon"><BadgeDollarSign size={32} strokeWidth={2} /></div>
                 <div className="stat-content">
                   <p className="stat-label">Zakat Collected</p>
                   <h3 className="stat-value">RM {stats.totalZakatCollected.toLocaleString()}</h3>
@@ -174,7 +175,7 @@ export default function AdminDashboard() {
               </div>
 
               <div className="admin-stat-card">
-                <div className="stat-icon">💳</div>
+                <div className="stat-icon"><CreditCard size={32} strokeWidth={2} /></div>
                 <div className="stat-content">
                   <p className="stat-label">Transactions</p>
                   <h3 className="stat-value">{stats.totalTransactions}</h3>
@@ -195,7 +196,7 @@ export default function AdminDashboard() {
                 className="admin-action-btn primary"
                 onClick={() => setActiveTab("nisab")}
               >
-                Update Nisab Rate →
+                <Pencil size={18} strokeWidth={2} /> Update Nisab Rate →
               </button>
               <button
                 className="admin-action-btn secondary"
@@ -210,7 +211,7 @@ export default function AdminDashboard() {
         {/* NISAB RATE TAB */}
         {activeTab === "nisab" && (
           <section className="admin-section">
-            <h2 className="admin-section-title">📈 Nisab Rate Management</h2>
+            <h2 className="admin-section-title"><BarChart3 size={18} strokeWidth={2} /> Nisab Rate Management</h2>
 
             <div className="nisab-info-box">
               <div className="nisab-info-row">
@@ -232,10 +233,10 @@ export default function AdminDashboard() {
                 className="admin-action-btn primary"
                 onClick={handleUpdateNisab}
               >
-                ✏️ Update Nisab Rate
+                <Pencil size={18} strokeWidth={2} /> Update Nisab Rate
               </button>
               <button className="admin-action-btn secondary">
-                📊 View History
+                <BarChart3 size={18} strokeWidth={2} /> View History
               </button>
             </div>
           </section>

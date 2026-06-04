@@ -428,10 +428,17 @@
 }
 
 .nisab-info-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   font-size: 20px;
   font-weight: 700;
   color: #3b2a0a;
   margin: 0 0 16px;
+}
+
+.nisab-info-title-icon {
+  color: #9a6d13;
 }
 
 .nisab-info-text {
@@ -448,6 +455,10 @@
 }
 
 .nisab-info-detail-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: flex-start;
+  gap: 12px;
   background: rgba(255, 255, 255, 0.6);
   padding: 16px 20px;
   border-radius: 12px;
@@ -455,6 +466,16 @@
   font-size: 14px;
   color: #5a4a35;
   line-height: 1.6;
+}
+
+.nisab-info-detail-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(212, 160, 23, 0.12);
+  color: #9a6d13;
 }
 
 .nisab-info-detail-item strong {
@@ -493,7 +514,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .nisab-btn-primary {
@@ -528,14 +549,6 @@
 
 .nisab-btn-secondary:active {
   transform: translateY(-1px) scale(0.99);
-}
-
-.nisab-btn-secondary::before {
-  content: '←';
-  display: inline-block;
-  margin-right: 10px;
-  font-weight: 800;
-  color: #7a5d2d;
 }
 
 /* Responsive Design */

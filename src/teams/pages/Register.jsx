@@ -46,34 +46,34 @@ function Register({ onRegisterSuccess, onBackToLogin }) {
   const validateForm = () => {
     // Check if all fields are filled
     if (!username.trim()) {
-      setMessage(`⚠️ ${t.enterFullName}`);
+      setMessage(t.enterFullName);
       return false;
     }
 
     if (!email.trim()) {
-      setMessage(`⚠️ ${t.enterEmail}`);
+      setMessage(t.enterEmail);
       return false;
     }
 
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email.trim())) {
-      setMessage(`❌ ${t.validEmail}`);
+      setMessage(t.validEmail);
       return false;
     }
 
     if (!password) {
-      setMessage(`⚠️ ${t.enterPassword}`);
+      setMessage(t.enterPassword);
       return false;
     }
 
     if (password.length < 6) {
-      setMessage(`❌ ${t.passwordMinLength}`);
+      setMessage(t.passwordMinLength);
       return false;
     }
 
     if (!selectedState || !malaysiaStates.includes(selectedState)) {
-      setMessage("⚠️ Please select a valid state.");
+      setMessage("Please select a valid state.");
       return false;
     }
 
@@ -139,7 +139,7 @@ console.log(
 );
       
       setIsLoading(false);
-      setMessage("✅ Account created successfully! Redirecting to login...");
+      setMessage("Account created successfully! Redirecting to login...");
 
       // Clear form fields
       setUsername("");
@@ -156,16 +156,16 @@ console.log(
       // Handle Firebase errors
       switch (error.code) {
         case 'auth/email-already-in-use':
-          setMessage("⚠️ An account with this email already exists");
+          setMessage("An account with this email already exists");
           break;
         case 'auth/weak-password':
-          setMessage("❌ Password is too weak. Please choose a stronger password");
+          setMessage("Password is too weak. Please choose a stronger password");
           break;
         case 'auth/invalid-email':
-          setMessage("❌ Invalid email address");
+          setMessage("Invalid email address");
           break;
         default:
-          setMessage("❌ Registration failed. Please try again");
+          setMessage("Registration failed. Please try again");
           break;
       }
     }
@@ -183,7 +183,7 @@ console.log(
         <p className="subtitle">Join our community. Create your account</p>
 
         {message && (
-          <p className={`message ${message.includes("✅") ? "success" : "error"}`}>
+          <p className={`message ${(message === "Account created successfully! Redirecting to login..." || /success|created/i.test(message)) ? "success" : "error"}`}>
             {message}
           </p>
         )}

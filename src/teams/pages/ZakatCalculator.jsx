@@ -5,9 +5,16 @@ import { getTranslationSection } from "../translations/translations";
 import { getUserState, setUserState } from "../utils/userStateStorage";
 import "../Styles/HomePage.css";
 import "../Styles/ZakatCalculator.css";
-import zakatIcon from "../../teams/assets/zakat-icon.webp";
-import Chatbot from "../components/Chatbot";
 import SidebarDrawer from "../components/SidebarDrawer";
+import {
+  Calculator,
+  BadgeDollarSign,
+  CheckCircle2,
+  Info,
+  BarChart3,
+  XCircle,
+} from "lucide-react";
+import Navbar from "../components/Navbar";
 
 const DEFAULT_STATE = "Selangor";
 const VALID_STATES = [
@@ -310,76 +317,7 @@ function ZakatCalculator({ onComplete }) {
       <div className="zakat-container">
         <div className="zakat-app-shell">
 
-          {/* 🔥 HEADER */}
-          <header className="premium-navbar">
-
-            {/* LEFT */}
-            <div className="navbar-left">
-
-              <button
-                className="sidebar-toggle"
-                onClick={() =>
-                  setIsDrawerOpen(true)
-                }
-              >
-                ≡
-              </button>
-
-              <button className="navbar-logo-button">
-                <span className="navbar-brand-name">ZakatNow</span>
-              </button>
-
-            </div>
-
-            {/* MENU */}
-            <nav className="premium-nav-menu">
-
-              <button
-                onClick={() =>
-                  navigate("/dashboard")
-                }
-              >
-                HOME PAGE
-              </button>
-
-              <button
-                onClick={() =>
-                  navigate("/calculator")
-                }
-              >
-                CALCULATE ZAKAT
-              </button>
-
-              <button
-                onClick={() =>
-                  navigate("/payment")
-                }
-              >
-                PAY ZAKAT
-              </button>
-
-              <button
-                onClick={() =>
-                  navigate("/check-zakat")
-                }
-              >
-                CHECK ZAKAT
-              </button>
-
-            </nav>
-
-            {/* RIGHT */}
-            <div className="navbar-right">
-              <button
-                className="sidebar-toggle"
-                onClick={() => setIsDrawerOpen(true)}
-                aria-label="Open menu"
-              >
-                ≡
-              </button>
-            </div>
-
-          </header>
+          <Navbar current="calculator" rightOpenDrawer={() => setIsDrawerOpen(true)} showLeftToggle={false} />
 
           <div className="zakat-stepper">
             <div className={`zakat-step ${!hasCalculated ? "active" : "done"}`}>
@@ -409,7 +347,7 @@ function ZakatCalculator({ onComplete }) {
           <div className={`zakat-grid ${showSummary ? 'zakat-grid-calculated' : ''}`}>
             <section className="zakat-card">
               <div className="zakat-section-head">
-                <div className="zakat-section-icon">🧮</div>
+                <div className="zakat-section-icon"><Calculator size={28} strokeWidth={2} /></div>
                 <div>
                   <h3 className="zakat-card-title">{t.enterFinancialData}</h3>
                   <p className="zakat-card-subtitle">
@@ -548,7 +486,7 @@ function ZakatCalculator({ onComplete }) {
               </div>
 
               <button
-                className="zakat-button zakat-button-primary"
+                className="zakat-button premium-pay-btn"
                 type="button"
                 onClick={handleCalculate}
               >
@@ -556,15 +494,14 @@ function ZakatCalculator({ onComplete }) {
               </button>
 
               <div className="zakat-note-box">
-                ℹ️ Please fill in the required values first, then click Calculate
-                Zakat.
+                <Info size={16} strokeWidth={2} style={{verticalAlign: 'middle', marginRight: 8}} /> Please fill in the required values first, then click Calculate Zakat.
               </div>
             </section>
 
             {showSummary ? (
               <section className="zakat-card zakat-result-card zakat-summary-animated">
                 <div className="zakat-section-head">
-                  <div className="zakat-section-icon">📊</div>
+                    <div className="zakat-section-icon"><BadgeDollarSign size={28} strokeWidth={2} /></div>
                   <div>
                     <h3 className="zakat-card-title">Zakat Summary</h3>
                     <p className="zakat-card-subtitle">
@@ -606,11 +543,15 @@ function ZakatCalculator({ onComplete }) {
                         : ""
                       }`}
                   >
-                    {hasCalculated
-                      ? total >= nisab
-                        ? "✔ Zakat Required"
-                        : "✗ Not Required"
-                      : "Calculating..."}
+                    {hasCalculated ? (
+                      total >= nisab ? (
+                        <><CheckCircle2 size={18} strokeWidth={2} style={{verticalAlign:'middle', marginRight:8}}/> Zakat Required</>
+                      ) : (
+                        <><XCircle size={18} strokeWidth={2} style={{verticalAlign:'middle', marginRight:8}}/> Not Required</>
+                      )
+                    ) : (
+                      "Calculating..."
+                    )}
                   </div>
                 </div>
 
@@ -672,19 +613,19 @@ function ZakatCalculator({ onComplete }) {
             ) : (
               <section className="zakat-card zakat-placeholder-card">
                 <div className="zakat-placeholder-content">
-                  <div className="zakat-placeholder-icon">📈</div>
-                  <h3 className="zakat-placeholder-title">Ready to Calculate</h3>
-                  <p className="zakat-placeholder-text">
-                    Complete your financial information to generate your zakat summary.
-                  </p>
-                </div>
+                    <div className="zakat-placeholder-icon"><BarChart3 size={36} strokeWidth={2} /></div>
+                    <h3 className="zakat-placeholder-title">Ready to Calculate</h3>
+                    <p className="zakat-placeholder-text">
+                      Complete your financial information to generate your zakat summary.
+                    </p>
+                  </div>
               </section>
             )}
           </div>
 
           <div className="zakat-info-strip">
             <div className="zakat-info-card">
-              <div className="zakat-info-icon">🛡️</div>
+              <div className="zakat-info-icon"><Info size={20} strokeWidth={2} /></div>
               <div>
                 <h4>
                   Nisab Information {selectedYear} ({selectedState})
