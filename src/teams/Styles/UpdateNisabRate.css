@@ -1,19 +1,20 @@
 .nisab-page {
   min-height: 100vh;
   padding: 40px 32px;
-  background: transparent;
-  color: #1f2937;
+  background: linear-gradient(180deg, #fdf6e3 0%, #f5e2b8 100%);
+  color: #3b2a0a;
 }
 
 .update-nisab-topbar {
   position: sticky;
   top: 0;
   z-index: 20;
-  background: rgba(255, 255, 255, 0.96);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  background: rgba(255, 252, 246, 0.96);
+  backdrop-filter: blur(20px);
+  border: 1px solid #eadfca;
   border-radius: 24px;
   margin-bottom: 24px;
-  box-shadow: 0 18px 60px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.06);
 }
 
 .update-nisab-topbar-inner {
@@ -31,9 +32,9 @@
   gap: 10px;
   padding: 12px 18px;
   border-radius: 14px;
-  border: 1px solid rgba(212, 160, 23, 0.25);
-  background: linear-gradient(135deg, #f9f2df, #fff9ef);
-  color: #6a4c14;
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  background: linear-gradient(145deg, #fff8ea, #f3e5c4);
+  color: #8b6526;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -41,7 +42,7 @@
 
 .back-button:hover {
   transform: translateY(-1px);
-  background: #fff7e5;
+  box-shadow: 0 8px 18px rgba(139, 101, 38, 0.12);
 }
 
 .back-icon {
@@ -239,15 +240,16 @@
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
-  color: #4b5563;
+  color: #8b6526;
   font-size: 0.95rem;
 }
 
 .dashboard-header {
-  background: #ffffff;
+  background: rgba(255, 252, 246, 0.98);
+  border: 1px solid #eadfca;
   border-radius: 24px;
   padding: 48px;
-  box-shadow: 0 10px 40px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.06);
   position: relative;
   overflow: hidden;
 }
@@ -266,22 +268,29 @@
   margin: 0 0 16px;
   font-size: 2.2rem;
   letter-spacing: -0.04em;
-  color: #111827;
+  color: #3b2a0a;
   font-weight: 800;
 }
 
 .nisab-subtitle {
   margin: 0;
-  color: #6b7280;
+  color: #8a6a2a;
   line-height: 1.6;
   font-size: 1.05rem;
 }
 
 .nisab-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 32px;
+  width: min(100%, 1040px);
+  margin: 0 auto 20px;
+  justify-items: stretch;
   margin-bottom: 20px;
+}
+
+.nisab-grid > * {
+  width: 100%;
 }
 
 @media (max-width: 768px) {
@@ -292,22 +301,22 @@
 }
 
 .nisab-card {
-  background: white;
+  background: #ffffff;
   border-radius: 24px;
   padding: 32px;
-  border: 1px solid #e0d5c0;
-  box-shadow: 0 10px 40px rgba(15, 23, 42, 0.06);
+  border: 1px solid #eadfca;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
   transition: all 0.3s ease;
 }
 
 .nisab-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 15px 50px rgba(15, 23, 42, 0.1);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
 }
 
 .nisab-card-header h2 {
   margin: 0 0 20px;
-  color: #111827;
+  color: #3b2a0a;
   font-size: 1.25rem;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -317,17 +326,17 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  background: white;
+  background: #ffffff;
   border-radius: 24px;
-  border: 1px solid #e0d5c0;
+  border: 1px solid #eadfca;
   transition: all 0.3s ease;
   padding: 32px;
-  box-shadow: 0 10px 40px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
 }
 
 .update-form:hover {
   transform: translateY(-2px);
-  box-shadow: 0 15px 50px rgba(15, 23, 42, 0.1);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
 }
 
 .update-form-row {
@@ -338,7 +347,7 @@
 
 .update-form-row label {
   font-weight: 700;
-  color: #111827;
+  color: #3b2a0a;
   font-size: 0.95rem;
   letter-spacing: 0.3px;
 }
@@ -346,9 +355,9 @@
 .update-form-row input {
   padding: 16px 18px;
   border-radius: 12px;
-  border: 1px solid #d9cdb8;
+  border: 1px solid #eadfca;
   font-size: 16px;
-  background: #faf8f3;
+  background: #fffdf8;
   transition: all 0.2s ease;
 }
 
@@ -362,26 +371,27 @@
 .readonly-field {
   padding: 16px 18px;
   border-radius: 12px;
-  border: 1px solid #d9cdb8;
-  background: #faf8f3;
+  border: 1px solid #eadfca;
+  background: #fffdf8;
   font-size: 16px;
   font-weight: 600;
-  color: #111827;
+  color: #3b2a0a;
   display: flex;
   align-items: center;
   min-height: 52px;
 }
 
 .history-card {
-  background: white;
+  background: #ffffff;
   border-radius: 24px;
   padding: 32px;
-  box-shadow: 0 10px 40px rgba(15, 23, 42, 0.06);
+  border: 1px solid #eadfca;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
 }
 
 .history-header h2 {
   margin: 0 0 24px;
-  color: #111827;
+  color: #3b2a0a;
   font-size: 1.3rem;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -400,16 +410,16 @@
 .history-table th,
 .history-table td {
   padding: 16px 18px;
-  border: 1px solid #e8dfc9;
-  color: #334155;
+  border: 1px solid #eadfca;
+  color: #3b2a0a;
   text-align: left;
 }
 
 .history-table th {
-  background: transparent;
+  background: #f8f3ea;
   text-align: left;
   font-weight: 700;
-  color: #111827;
+  color: #8b6526;
   font-size: 0.9rem;
   letter-spacing: 0.4px;
   text-transform: uppercase;
@@ -420,7 +430,7 @@
 }
 
 .history-table tbody tr:hover {
-  background: #faf8f3;
+  background: #fff8ea;
 }
 
 .aktif-row {
@@ -459,7 +469,7 @@
 .confirm-modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.3);
+  background: rgba(59, 42, 10, 0.28);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -472,19 +482,24 @@
   background: #ffffff;
   border-radius: 24px;
   padding: 28px;
-  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.18);
+  box-shadow: 0 24px 80px rgba(59, 42, 10, 0.18);
+  border: 1px solid #eadfca;
 }
 
 .confirm-modal h2 {
   margin-top: 0;
-  color: #111827;
+  color: #3b2a0a;
 }
 
 .confirm-preview {
-  background: #f8fafc;
+  background: #f8f3ea;
   padding: 20px;
   border-radius: 18px;
   margin-bottom: 20px;
+}
+
+.nisab-footer {
+  color: #8b6526;
 }
 
 .confirm-modal-buttons {

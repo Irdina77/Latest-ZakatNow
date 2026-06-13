@@ -271,7 +271,6 @@ export default function AdminDashboard() {
                     <th>Email</th>
                     <th>Status</th>
                     <th>Joined</th>
-                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -280,21 +279,18 @@ export default function AdminDashboard() {
                     <td>user@example.com</td>
                     <td><span className="status-badge active">Active</span></td>
                     <td>2026-05-15</td>
-                    <td><button className="table-action-btn">View</button></td>
                   </tr>
                   <tr>
                     <td>#U002</td>
                     <td>another@example.com</td>
                     <td><span className="status-badge active">Active</span></td>
                     <td>2026-05-10</td>
-                    <td><button className="table-action-btn">View</button></td>
                   </tr>
                   <tr>
                     <td>#U003</td>
                     <td>inactive@example.com</td>
                     <td><span className="status-badge inactive">Inactive</span></td>
                     <td>2026-04-20</td>
-                    <td><button className="table-action-btn">View</button></td>
                   </tr>
                 </tbody>
               </table>
