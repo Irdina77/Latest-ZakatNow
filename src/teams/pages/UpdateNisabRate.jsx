@@ -1,24 +1,21 @@
-import { useState, useEffect, useRef } from "react";
+import logo from "../assets/zakat-icon.webp";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import NisabCard from "../components/NisabCard";
 import UpdateForm from "../components/UpdateForm";
 import ConfirmModal from "../components/ConfirmModel";
 import "../Styles/UpdateNisabRate.css";
-import { Bell, Settings, UserRound } from 'lucide-react';
 
 export default function UpdateNisabRate({
-  data,
+  data = {},
   history = [],
-  onUpdate,
-  onDelete,
-  onGoDashboard,
-  onGoNisab,
-  onGoManageData,
+  onUpdate = () => { },
+  onDelete = () => { },
 }) {
+  const navigate = useNavigate();
   const [previewData, setPreviewData] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [showSettingMenu, setShowSettingMenu] = useState(false);
-  const settingMenuRef = useRef(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -26,22 +23,6 @@ export default function UpdateNisabRate({
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        settingMenuRef.current &&
-        !settingMenuRef.current.contains(event.target)
-      ) {
-        setShowSettingMenu(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
   }, []);
 
   const date = currentTime.toLocaleDateString("en-GB", {
@@ -79,63 +60,33 @@ export default function UpdateNisabRate({
     alert("Draft saved successfully.");
   };
 
-  const handleLogout = () => {
-    alert("Logout clicked");
-    setShowSettingMenu(false);
-  };
-
   return (
     <div className="nisab-page">
-      <nav className="dashboard-topbar">
-        <div className="dashboard-topbar-inner">
+      <nav className="update-nisab-topbar">
+        <div className="update-nisab-topbar-inner">
+          <button
+            type="button"
+            className="back-button"
+            onClick={() => navigate(-1)}
+          >
+            <span className="back-icon">←</span>
+            Back
+          </button>
+
           <div className="dashboard-brand">
-            <div className="brand-logo">✦</div>
-            <span className="brand-text">ZAKAT NOW SYSTEM</span>
-          </div>
+            <img
+              src={logo}
+              alt="ZakatNow"
+              className="navbar-logo"
+            />
 
-          <div className="dashboard-menu">
-            <button className="menu-link" onClick={onGoDashboard}>
-              System Data
-            </button>
+            <div>
+              <div className="admin-brand-name">
+                ZakatNow
+              </div>
 
-            <button className="menu-link active" onClick={onGoNisab}>
-              Nisab Management
-            </button>
-          </div>
-
-          <div className="dashboard-right">
-            <span className="top-icon"><Bell size={18} strokeWidth={2} /></span>
-
-            <div
-              className="setting-dropdown-wrapper"
-              ref={settingMenuRef}
-            >
-              <span
-                className="top-icon"
-                onClick={() => setShowSettingMenu((prev) => !prev)}
-                style={{ cursor: "pointer" }}
-              >
-                <Settings size={18} strokeWidth={2} />
-              </span>
-
-              {showSettingMenu && (
-                <div className="setting-dropdown-menu">
-                  <button
-                    className="setting-dropdown-item"
-                    onClick={handleLogout}
-                  >
-                    🚪
-                    <span>Logout</span>
-                  </button>
-                </div>
-              )}
-            </div>
-
-            <div className="admin-box">
-              <div className="admin-avatar"><UserRound size={36} strokeWidth={2} /></div>
-              <div>
-                <div className="admin-name">Admin</div>
-                <div className="admin-role">Super Admin</div>
+              <div className="admin-subtitle">
+                Admin Panel
               </div>
             </div>
           </div>

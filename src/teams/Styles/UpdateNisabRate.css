@@ -1,24 +1,303 @@
+.nisab-page {
+  min-height: 100vh;
+  padding: 28px;
+  background: linear-gradient(180deg, #f9f5ee 0%, #fffdf9 100%);
+  color: #1f2937;
+}
+
+.update-nisab-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 18px 60px rgba(15, 23, 42, 0.08);
+}
+
+.update-nisab-topbar-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 24px;
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(212, 160, 23, 0.25);
+  background: linear-gradient(135deg, #f9f2df, #fff9ef);
+  color: #6a4c14;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.back-button:hover {
+  transform: translateY(-1px);
+  background: #fff7e5;
+}
+
+.back-icon {
+  font-size: 1rem;
+}
+
+.dashboard-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f8e5b7 0%, #d9b65f 100%);
+  color: #924a06;
+  font-weight: 800;
+  box-shadow: 0 12px 24px rgba(217, 182, 104, 0.24);
+}
+
+.dashboard-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-brand-name {
+  display: block;
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: #8b6526;
+  margin: 0;
+  line-height: 1;
+}
+
+.admin-subtitle {
+  font-size: 12px;
+  color: #b48a2b;
+  margin-top: 2px;
+}
+
+.dashboard-menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.menu-link {
+  border: 1px solid transparent;
+  background: transparent;
+  color: #4b5563;
+  padding: 12px 18px;
+  border-radius: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.menu-link:hover {
+  color: #1f2937;
+  background: rgba(255, 237, 213, 0.65);
+}
+
+.menu-link.active {
+  background: rgba(212, 160, 23, 0.12);
+  border-color: rgba(212, 160, 23, 0.25);
+  color: #924a06;
+}
+
+.dashboard-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.top-icon {
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #5b4636;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.06);
+}
+
+.setting-dropdown-wrapper {
+  position: relative;
+}
+
+.setting-dropdown-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.14);
+  border-radius: 18px;
+  padding: 8px 0;
+  min-width: 220px;
+  z-index: 30;
+}
+
+.setting-dropdown-item {
+  width: 100%;
+  padding: 12px 18px;
+  background: transparent;
+  border: none;
+  color: #334155;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.setting-dropdown-item:hover {
+  background: rgba(248, 231, 176, 0.18);
+}
+
+.admin-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 18px;
+}
+
+.admin-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f7e5c3;
+  color: #7d4d0f;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.admin-name {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.admin-role {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.82rem;
+}
+
 .nisab-container {
+  max-width: 1400px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 28px;
+}
+
+.dashboard-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.admin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: rgba(254, 243, 199, 0.8);
+  border-radius: 999px;
+  color: #b45309;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.meta-right {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  color: #4b5563;
+  font-size: 0.95rem;
+}
+
+.dashboard-header {
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 40px;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-header::after {
+  content: "✦";
+  position: absolute;
+  right: 40px;
+  top: 20px;
+  font-size: 60px;
+  color: #d4a017;
+  opacity: 0.15;
+}
+
+.dashboard-header h1 {
+  margin: 0 0 10px;
+  font-size: 2.1rem;
+  letter-spacing: -0.04em;
+  color: #111827;
+}
+
+.nisab-subtitle {
+  margin: 0;
+  color: #4b5563;
+  line-height: 1.75;
 }
 
 .nisab-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 24px;
 }
 
 .nisab-card {
   background: white;
-  border-radius: 24px;
-  padding: 24px;
+  border-radius: 28px;
+  padding: 28px;
+  border: 1px solid #eadfca;
   box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+  transition: all 0.3s ease;
+}
+
+.nisab-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
 }
 
 .nisab-card-header h2 {
   margin: 0 0 12px;
+  color: #111827;
 }
 
 .update-form {
@@ -27,8 +306,15 @@
   gap: 18px;
   background: white;
   border-radius: 24px;
+  border: 1px solid #eadfca;
+  transition: all 0.3s ease;
   padding: 24px;
   box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+}
+
+.update-form:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
 }
 
 .update-form-row {
@@ -47,6 +333,7 @@
   border-radius: 14px;
   border: 1px solid #d1d5db;
   font-size: 16px;
+  background: #f8fafc;
 }
 
 .history-card {
@@ -58,6 +345,7 @@
 
 .history-header h2 {
   margin: 0 0 16px;
+  color: #111827;
 }
 
 .table-wrapper {
@@ -67,12 +355,29 @@
 .history-table {
   width: 100%;
   border-collapse: collapse;
+  background: #ffffff;
 }
 
 .history-table th,
 .history-table td {
   padding: 14px 16px;
   border: 1px solid #e5e7eb;
+  color: #334155;
+}
+
+.history-table th {
+  background: #f8fafc;
+  text-align: left;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.history-table tbody tr:hover {
+  background: #f8f5e9;
+}
+
+.aktif-row {
+  background: #fef3c7;
 }
 
 .badge-aktif,
@@ -80,6 +385,8 @@
   padding: 6px 10px;
   border-radius: 999px;
   font-weight: 700;
+  display: inline-flex;
+  align-items: center;
 }
 
 .badge-aktif {
@@ -92,8 +399,38 @@
   color: #b45309;
 }
 
+.btn-secondary {
+  background: #fef3c7;
+  color: #924a06;
+  border: 1px solid #f3d06a;
+}
+
+.btn-secondary:hover {
+  background: #fce9a6;
+}
+
+.confirm-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 50;
+}
+
 .confirm-modal {
-  max-width: 420px;
+  width: min(100%, 460px);
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.18);
+}
+
+.confirm-modal h2 {
+  margin-top: 0;
+  color: #111827;
 }
 
 .confirm-preview {
@@ -108,3 +445,43 @@
   gap: 12px;
   flex-wrap: wrap;
 }
+
+@media (max-width: 720px) {
+  .dashboard-topbar-inner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .dashboard-menu {
+    justify-content: center;
+  }
+
+  .dashboard-header,
+  .nisab-card,
+  .update-form,
+  .history-card {
+    padding: 20px;
+  }
+}
+
+.update-form button {
+  height: 58px;
+  border: none;
+  border-radius: 18px;
+  background: linear-gradient(
+    135deg,
+    #d4a017,
+    #f0c35c
+  );
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.update-form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(212,160,23,0.35);
+}
+

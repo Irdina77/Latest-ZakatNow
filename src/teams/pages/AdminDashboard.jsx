@@ -3,7 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
 import { getTranslationSection } from "../translations/translations";
 import "../Styles/AdminDashboard.css";
-import { BarChart3, Pencil, CreditCard, UserRound, BadgeDollarSign } from 'lucide-react';
+import {
+  BarChart3,
+  Pencil,
+  CreditCard,
+  UserRound,
+  BadgeDollarSign,
+  ShieldCheck,
+  Users,
+  Receipt
+} from "lucide-react";
 import zakatIcon from "../assets/zakat-icon.webp";
 
 export default function AdminDashboard() {
@@ -89,9 +98,8 @@ export default function AdminDashboard() {
             {showMenu && (
               <div className="admin-menu-dropdown">
                 <button
-                  className={`admin-menu-item ${
-                    activeTab === "overview" ? "active" : ""
-                  }`}
+                  className={`admin-menu-item ${activeTab === "overview" ? "active" : ""
+                    }`}
                   onClick={() => {
                     setActiveTab("overview");
                     setShowMenu(false);
@@ -101,9 +109,8 @@ export default function AdminDashboard() {
                 </button>
 
                 <button
-                  className={`admin-menu-item ${
-                    activeTab === "nisab" ? "active" : ""
-                  }`}
+                  className={`admin-menu-item ${activeTab === "nisab" ? "active" : ""
+                    }`}
                   onClick={() => {
                     setActiveTab("nisab");
                     setShowMenu(false);
@@ -113,9 +120,8 @@ export default function AdminDashboard() {
                 </button>
 
                 <button
-                  className={`admin-menu-item ${
-                    activeTab === "users" ? "active" : ""
-                  }`}
+                  className={`admin-menu-item ${activeTab === "users" ? "active" : ""
+                    }`}
                   onClick={() => {
                     setActiveTab("users");
                     setShowMenu(false);
@@ -125,9 +131,8 @@ export default function AdminDashboard() {
                 </button>
 
                 <button
-                  className={`admin-menu-item ${
-                    activeTab === "transactions" ? "active" : ""
-                  }`}
+                  className={`admin-menu-item ${activeTab === "transactions" ? "active" : ""
+                    }`}
                   onClick={() => {
                     setActiveTab("transactions");
                     setShowMenu(false);
@@ -183,7 +188,9 @@ export default function AdminDashboard() {
               </div>
 
               <div className="admin-stat-card">
-                <div className="stat-icon">🔐</div>
+                <div className="stat-icon">
+                  <ShieldCheck size={32} strokeWidth={2} />
+                </div>
                 <div className="stat-content">
                   <p className="stat-label">Active Admins</p>
                   <h3 className="stat-value">{stats.activeAdmins}</h3>
@@ -245,7 +252,10 @@ export default function AdminDashboard() {
         {/* USERS TAB */}
         {activeTab === "users" && (
           <section className="admin-section">
-            <h2 className="admin-section-title">👥 User Management</h2>
+            <h2 className="admin-section-title">
+              <Users size={28} strokeWidth={2} />
+              User Management
+            </h2>
 
             <div className="users-table-container">
               <table className="admin-table">
@@ -289,7 +299,10 @@ export default function AdminDashboard() {
         {/* TRANSACTIONS TAB */}
         {activeTab === "transactions" && (
           <section className="admin-section">
-            <h2 className="admin-section-title">💳 Transaction History</h2>
+            <h2 className="admin-section-title">
+              <Receipt size={28} strokeWidth={2} />
+              Transaction History
+            </h2>
 
             <div className="transactions-table-container">
               <table className="admin-table">
