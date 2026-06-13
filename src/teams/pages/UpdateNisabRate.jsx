@@ -179,7 +179,7 @@ export default function UpdateNisabRate({
 
         <div className="nisab-grid">
           <NisabCard data={currentNisab} history={historyItems} />
-          <UpdateForm onPreview={handlePreview} />
+          <UpdateForm onPreview={handlePreview} initialGold={currentNisab?.goldPrice || 0} />
         </div>
 
         <section className="nisab-card history-card">

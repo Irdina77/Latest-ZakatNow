@@ -21,6 +21,12 @@ body {
   overflow-x: hidden;
 }
 
+/* Full-screen app background shared across pages */
+body {
+  background-color: #f9f5ee; /* single uniform background color */
+  background-image: none;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

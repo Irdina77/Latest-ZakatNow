@@ -38,6 +38,21 @@ export default function AdminDashboard() {
     activeAdmins: 5,
   });
 
+  // Load current nisab from localStorage
+  useEffect(() => {
+    const savedNisab = JSON.parse(localStorage.getItem("nisabData") || "null");
+    if (savedNisab && savedNisab.goldPrice && savedNisab.nisabValue) {
+      setNisabRate({
+        value: Number(savedNisab.nisabValue).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }),
+        lastUpdated: savedNisab.lastUpdated || "May 22, 2026",
+        currency: savedNisab.currency || "MYR",
+      });
+    }
+  }, []);
+
   // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -205,12 +220,6 @@ export default function AdminDashboard() {
               >
                 <Pencil size={18} strokeWidth={2} /> Update Nisab Rate →
               </button>
-              <button
-                className="admin-action-btn secondary"
-                onClick={() => setActiveTab("users")}
-              >
-                Manage Users →
-              </button>
             </div>
           </section>
         )}
@@ -241,9 +250,6 @@ export default function AdminDashboard() {
                 onClick={handleUpdateNisab}
               >
                 <Pencil size={18} strokeWidth={2} /> Update Nisab Rate
-              </button>
-              <button className="admin-action-btn secondary">
-                <BarChart3 size={18} strokeWidth={2} /> View History
               </button>
             </div>
           </section>
