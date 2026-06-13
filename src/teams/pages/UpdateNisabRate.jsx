@@ -6,16 +6,39 @@ import UpdateForm from "../components/UpdateForm";
 import ConfirmModal from "../components/ConfirmModel";
 import "../Styles/UpdateNisabRate.css";
 
+const DEFAULT_NISAB = {
+  goldPrice: 250,
+  nisabValue: 6250,
+  year: 2026,
+  lastUpdated: "1 January 2026",
+  currency: "MYR",
+};
+
 export default function UpdateNisabRate({
   data = {},
   history = [],
-  onUpdate = () => { },
-  onDelete = () => { },
+  onUpdate = () => {},
+  onDelete = () => {},
 }) {
   const navigate = useNavigate();
   const [previewData, setPreviewData] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [currentNisab, setCurrentNisab] = useState(DEFAULT_NISAB);
+  const [historyItems, setHistoryItems] = useState([]);
+
+  useEffect(() => {
+    const savedNisab = JSON.parse(localStorage.getItem("nisabData") || "null");
+    const savedHistory = JSON.parse(localStorage.getItem("nisabHistory") || "[]");
+
+    if (savedNisab && savedNisab.goldPrice) {
+      setCurrentNisab(savedNisab);
+    }
+
+    if (Array.isArray(savedHistory)) {
+      setHistoryItems(savedHistory);
+    }
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -45,7 +68,44 @@ export default function UpdateNisabRate({
 
   const handleConfirm = () => {
     if (!previewData) return;
-    onUpdate(previewData);
+
+    const confirmedData = {
+      ...currentNisab,
+      goldPrice: Number(previewData.goldPrice),
+      nisabValue: Number(previewData.nisabValue),
+      year: new Date().getFullYear(),
+      lastUpdated: date,
+    };
+
+    const updatedBy =
+      localStorage.getItem("userEmail") ||
+      localStorage.getItem("userRole") ||
+      "Admin";
+
+    const newHistoryItem = {
+      id: `U-${Date.now()}`,
+      effectiveDate: date,
+      goldPrice: Number(previewData.goldPrice),
+      nisabValue: Number(previewData.nisabValue),
+      status: "Active",
+      updatedBy,
+      active: true,
+    };
+
+    const normalizedHistory = historyItems.map((item) => ({
+      ...item,
+      active: false,
+      status: item.status === "Active" ? "Expired" : item.status,
+    }));
+
+    const newHistory = [newHistoryItem, ...normalizedHistory];
+
+    setCurrentNisab(confirmedData);
+    setHistoryItems(newHistory);
+    localStorage.setItem("nisabData", JSON.stringify(confirmedData));
+    localStorage.setItem("nisabHistory", JSON.stringify(newHistory));
+    onUpdate(confirmedData);
+
     setShowModal(false);
     setPreviewData(null);
   };
@@ -58,6 +118,13 @@ export default function UpdateNisabRate({
   const handleDraft = () => {
     setShowModal(false);
     alert("Draft saved successfully.");
+  };
+
+  const handleDelete = (id) => {
+    const updated = historyItems.filter((item) => item.id !== id);
+    setHistoryItems(updated);
+    localStorage.setItem("nisabHistory", JSON.stringify(updated));
+    onDelete(id);
   };
 
   return (
@@ -111,7 +178,7 @@ export default function UpdateNisabRate({
         </header>
 
         <div className="nisab-grid">
-          <NisabCard data={data} history={history} />
+          <NisabCard data={currentNisab} history={historyItems} />
           <UpdateForm onPreview={handlePreview} />
         </div>
 
@@ -135,14 +202,13 @@ export default function UpdateNisabRate({
               </thead>
 
               <tbody>
-                {history.map((item) => (
+                {historyItems.map((item) => (
                   <tr key={item.id} className={item.active ? "aktif-row" : ""}>
                     <td>{item.id}</td>
                     <td>{item.effectiveDate}</td>
                     <td>RM {Number(item.goldPrice).toFixed(2)}</td>
                     <td>
-                      RM{" "}
-                      {Number(item.nisabValue).toLocaleString(undefined, {
+                      RM {Number(item.nisabValue).toLocaleString(undefined, {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
                       })}
@@ -164,7 +230,7 @@ export default function UpdateNisabRate({
                         className="btn btn-outline"
                         onClick={() => {
                           if (window.confirm("Delete this history record?")) {
-                            onDelete(item.id);
+                            handleDelete(item.id);
                           }
                         }}
                       >
@@ -179,7 +245,7 @@ export default function UpdateNisabRate({
         </section>
 
         <footer className="nisab-footer">
-          © {data?.year || "2026"} Zakat Organisation Portal
+          © {currentNisab?.year || "2026"} Zakat Organisation Portal
         </footer>
       </div>
 
